@@ -1,1 +1,46 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&display=swap');
+
+@theme {
+
+  --color-canvas: #F8F7F4;             /* Fundo principal estilo papel (Warm Off-White) */
+  --color-ink: #1A1A1A;                /* Texto principal e elementos escuros (Charcoal Ink) */
+  --color-surface: #FFFFFF;            /* Superfícies de cards e caixas de texto (Pure White) */
+
+  /* ==========================================
+     2. COR DE DESTAQUE (PRIMARY ACCENT)
+     ========================================== */
+  --color-accent: #2887FF;            /* Azul Elétrico Principal (Electric Blue) */
+  --color-accent-hover: #1E70E0;      /* Azul Elétrico para foco/hover */
+  --color-accent-light: #EBF3FF;      /* Fundo suave para tags ativas */
+
+  /* ==========================================
+     3. NEUTROS E SUPERFÍCIES (NEUTRAL SCALE)
+     ========================================== */
+  --color-neutral-50: #FAF9F6;        /* Fundo de inputs e seções internas */
+  --color-neutral-100: #F3F2EE;       /* Fundo de chips e botões neutros */
+  --color-neutral-200: #E7E5E4;       /* Cinza para bordas e hovers claros */
+  --color-neutral-300: #D6D3D1;       /* Scrollbar e divisores */
+  --color-ink-hover: #333333;         /* Hover de botões pretos */
+
+  /* ==========================================
+     4. TRANSPARÊNCIAS E OPACIDADES DE TEXTO
+     ========================================== */
+  --color-text-primary: #1A1A1A;      /* Texto de alto contraste */
+  --color-text-secondary: rgba(26, 26, 26, 0.70); /* Subtítulos e parágrafos */
+  --color-text-muted: rgba(26, 26, 26, 0.50);     /* Datas, contadores e notas de rodapé */
+  --color-border-subtle: rgba(26, 26, 26, 0.10);  /* Linhas divisórias de 1px */
+  --color-border-strong: rgba(26, 26, 26, 0.20);  /* Bordas de controles e botões */
+
+  /* ==========================================
+     5. CORES FUNCIONAIS E DE AVALIAÇÃO
+     ========================================== */
+  --color-[#2887FF]: #2887FF;      /* Ícone e nota da avaliação (Estrelas) */
+  --color-backdrop-overlay: rgba(26, 26, 26, 0.80); /* Fundo escuro de Modais */
+}
+
+:root {
+    font-family: "Cormorant", serif;
+    background: var(--color-canvas)
+    
+};

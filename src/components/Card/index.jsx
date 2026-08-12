@@ -5,9 +5,16 @@ import { IoStarSharp } from "react-icons/io5"
 
 
 export default function Card({isActive, props, start, credits}) {
+    let actorInFilm = []
+
+    if (isActive) {
+        actorInFilm = [credits.cast[0], credits.cast[1], credits.cast[2]]
+    }
+
+    
 
     return (
-        <div class={"bg-surface mx-3 my-4 p-3 rounded-lg border-neutral-300 border-b font-sans"}>
+        <div class={"bg-surface mx-3 my-4 p-5 px-9 flex-wrap rounded-lg border-neutral-300 border-b font-sans"}>
             {isActive ? (
                 <div class={"flex py-5 justify-center items-center flex-col font-medium"}>
                   <img class={"cursor-pointer h-55"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
@@ -21,12 +28,32 @@ export default function Card({isActive, props, start, credits}) {
                   <h2 class={"italic text-lg"}> {props.title} </h2>
                   <h3 class={"text-gray-300"}> {(credits.crew[0].name).toUpperCase()} </h3>
 
-                  <div class={"my-4 "}>
+                  <div class={"my-4 flex gap-1 flex-wrap items-center justify-center"}>
                     {
                       props.genres.map((genre) => {
                         return <span key={genre.id} class={"text-xs border-gray-300 border-2 mr-2 py-1 px-3"}> {(genre.name).toUpperCase()} </span>
                       })
                     }
+                  </div>
+
+                  <span class={"h-2 block w-full border-neutral-300 border-b my-3"}/>
+
+                  <div class={"my-2 text-sm h-18 overflow-y-scroll"}>
+                    <p class={"text-gray-600"}>{props.overview}</p>
+                  </div>
+
+                  <span class={"h-2 block w-full border-neutral-300 border-b my-3"}/>
+
+                  <div class={"flex flex-wrap gap-1 items-center"}>
+                    <h4>Elenco:</h4>
+
+                    {actorInFilm.map((actor) => {
+                        return <p key={actor.id} class={"text-gray-400 text-sm"}> {actor.name}</p>
+                    })}
+                  </div>
+
+                  <div class={"mt-6 w-full"}>
+                    <button class={"bg-ink w-full block p-3 text-white cursor-pointer font-bold font-sans"}> TRAILER</button>
                   </div>
 
 

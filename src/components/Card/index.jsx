@@ -5,9 +5,6 @@ import { IoStarSharp } from "react-icons/io5"
 
 
 export default function Card({isActive, props, start, credits}) {
-    console.log(credits)
-    console.log(props)
-
 
     return (
         <div class={"bg-surface mx-3 my-4 p-3 rounded-lg border-neutral-300 border-b font-sans"}>

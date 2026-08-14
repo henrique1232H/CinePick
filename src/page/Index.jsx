@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-assignment */
 import { useEffect, useState } from 'react'
 import { api } from '../service/api'
 import Header from '../components/Header'
@@ -6,8 +7,8 @@ import Card from '../components/Card'
 import { IoIosFunnel } from 'react-icons/io'
 import SelectInput from '../components/SelectInput'
 import { FaRegUser } from 'react-icons/fa'
-import { MdDone } from 'react-icons/md'
-import { Ring } from 'ldrs/react'
+import ActorCard from '../components/ActorCard'
+import checkFilters from '../components/checkFilters'
 
 export default function App() {
 
@@ -24,14 +25,13 @@ export default function App() {
       let filmsToRandom = []
       let response;
 
-      
+      console.log(actorInformation)
+      console.log(chooseGenre)
 
       for(let i = 1; i <= 5; i++) {
-        if (chooseGenre === 0) {
-          response = await api.get(`/discover/movie?language=pt-BR&page=${i}`);
-        } else {
-          response = await api.get(`/discover/movie?language=pt-BR&with_genres=${chooseGenre}`)
-        }
+       
+        let check = await checkFilters(response, chooseGenre, actor, i, actorInformation);
+        response = check;
 
         response.data.results.forEach(filmInArray => {
           filmsToRandom = [...filmsToRandom, filmInArray];
@@ -76,13 +76,11 @@ export default function App() {
      let response;
       try {
         setLoading(true)
-        response = await api.get(`/search/person?query=${actor}`);
-        console.log(response.data)
+        response = await api.get(`/search/person?query=${actor}&language=pt-BR`);
 
       } catch (err) {
         console.log(err)
       } finally {
-        console.log(response.data)
         setLoading(false)
         setActorInformation(response.data.results[0])
       }
@@ -90,8 +88,6 @@ export default function App() {
 
      searchActor()
   }, [actor])
-
-  console.log(actorInformation === undefined)
 
   return (
     <>
@@ -131,41 +127,7 @@ export default function App() {
          <input type="text" className={"w-full p-3 bg-gray-100 border-gray-300 border-1"} value={actor} onChange={(e) => setActor(e.target.value)}/>
           {
             actor.length > 1 && (
-              <div className={"bg-ink p-3 my-5 border-l-4 border-accent"}>
-                <div className={"flex justify-between items-center"}>
-                  <h4 className={"flex text-[10px] text-accent font-bold gap-2"}>
-                   <MdDone fontSize={15} className={"text-green-400"}/>
-                   ATOR CONFIRMADO PARA A ROLETA 
-                  </h4>
-
-                  <span className={"text-[8px] bg-accent/20 border-accent/30 border-1 text-accent p-2"}>FILTRO ATIVO</span>
-                </div>
-
-                {
-                  loading ? (
-                    <span className={"flex items-center text-white gap-1"}>
-                      <Ring size="30" color="#2887FF"/>
-                      <p className={"text-[10px]"}>Verificando dados de {actor} </p>
-                    </span>
-                  ) : actorInformation === undefined ? (
-                    <div className={"flex items-center gap-2"}>
-                      <img className={"h-11 w-9"} src={""} alt="" />
-                      
-                    </div>
-                  ) : (
-                    <div className={"flex items-center gap-2"}>
-                      <img className={"h-11 w-9"} src={`https://image.tmdb.org/t/p/w200${actorInformation.profile_path}`} alt={`Foto do ${actorInformation.original_name}`} />
-
-                      <span>
-                        <h4 className={"text-white"}> {actorInformation.original_name} </h4>
-                      </span>
-
-                    </div>
-                  )
-                }
-
-              </div>
-
+              <ActorCard  actorInformation={actorInformation} loading={loading} actor={actor}/>
             )
           }
         </div>

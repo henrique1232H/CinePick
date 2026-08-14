@@ -1,6 +1,4 @@
 import { FaDice } from "react-icons/fa"
-import { api } from "../../service/api"
-import { useState } from "react"
 import { IoStarSharp } from "react-icons/io5"
 
 
@@ -35,12 +33,21 @@ export default function Card({isActive, props, start, credits}) {
                       })
                     }
                   </div>
-
+                    
                   <span class={"h-2 block w-full border-neutral-300 border-b my-3"}/>
 
-                  <div class={"my-2 text-sm h-18 overflow-y-scroll"}>
-                    <p class={"text-gray-600"}>{props.overview}</p>
-                  </div>
+                  {
+                    props.overviey === "" ? (
+                     <div class={"my-2 text-sm h-18"}>
+                       <p class={"text-gray-600"}>Esse filme não possui nenhuma sinopse</p>
+                     </div>   
+                    ) : (
+                        <div class={"my-2 text-sm h-18 overflow-y-scroll"}>
+                            <p class={"text-gray-600"}>{props.overview}</p>
+                        </div>   
+                    )
+                  }
+
 
                   <span class={"h-2 block w-full border-neutral-300 border-b my-3"}/>
 

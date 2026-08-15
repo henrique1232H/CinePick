@@ -2,6 +2,7 @@ import { FaDice } from "react-icons/fa"
 import { api } from "../../service/api"
 import { useState } from "react"
 import { IoStarSharp } from "react-icons/io5"
+import DialogModal from "../DialogModal"
 
 
 export default function Card({isActive, props, start, credits}) {
@@ -9,6 +10,7 @@ export default function Card({isActive, props, start, credits}) {
 
     if (isActive) {
         actorInFilm = [credits.cast[0], credits.cast[1], credits.cast[2]]
+        console.log(props)
     }
 
     
@@ -17,7 +19,10 @@ export default function Card({isActive, props, start, credits}) {
         <div class={"bg-surface mx-3 my-4 p-5 px-9 flex-wrap rounded-lg border-neutral-300 border-b font-sans"}>
             {isActive ? (
                 <div class={"flex py-5 justify-center items-center flex-col font-medium"}>
-                  <img class={"cursor-pointer h-55"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
+
+                  <DialogModal props={props}>
+                    <img class={"cursor-pointer h-55"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
+                  </DialogModal>
 
                   <div class={"flex items-center justify-center gap-4 my-3"}>
                     <span class={"bg-ink text-white text-sm px-2 py-1"}>{props.release_date[0]}{props.release_date[1]}{props.release_date[2]}{props.release_date[3]}</span>

@@ -8,7 +8,7 @@ import { IoIosFunnel } from 'react-icons/io'
 import SelectInput from '../components/SelectInput'
 import { FaRegUser } from 'react-icons/fa'
 import ActorCard from '../components/ActorCard'
-import checkFilters from '../components/checkFilters'
+import {checkFilters} from '../components/checkFilters'
 
 export default function App() {
 
@@ -25,15 +25,12 @@ export default function App() {
       let filmsToRandom = []
       let response;
 
-      console.log(actorInformation)
-      console.log(chooseGenre)
-
       for(let i = 1; i <= 5; i++) {
-       
-        let check = await checkFilters(response, chooseGenre, actor, i, actorInformation);
-        response = check;
 
-        response.data.results.forEach(filmInArray => {
+        console.log(actorInformation)
+        response = await checkFilters(chooseGenre, actor, i, actorInformation);
+    
+        response.results.forEach(filmInArray => {
           filmsToRandom = [...filmsToRandom, filmInArray];
         })
         i++

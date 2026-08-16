@@ -12,7 +12,7 @@ export default function ActorCard({actorInformation, loading, actor}) {
                    ATOR CONFIRMADO PARA A ROLETA 
                   </h4>
 
-                  <span className={"text-[8px] bg-accent/20 border-accent/30 border-1 text-accent p-2"}>FILTRO ATIVO</span>
+                  <span className={"text-[8px] bg-accent/20 border-accent/30 border text-accent p-2"}>FILTRO ATIVO</span>
                 </div>
 
                 {
@@ -22,7 +22,7 @@ export default function ActorCard({actorInformation, loading, actor}) {
                       <p className={"text-[10px]"}>Verificando dados de {actor} </p>
                     </span>
                   ) : actorInformation === undefined ? (
-                    <div className={"flex items-center gap-2 text-white gap-1"}>
+                    <div className={"flex items-center gap-2 text-white"}>
                       <img className={"h-11 w-9"} src={""} alt="" />
                       <p className={"text-[10px]"}> Não achamos esse ator/atriz...</p>
                       

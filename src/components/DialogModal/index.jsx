@@ -6,20 +6,27 @@ import { api } from "../../service/api";
 
 export default function DialogModal({children,props, credits, actors, providers}) {
 
-	console.log(providers)
-
     return (
         <AlertDialog.Root>
             <AlertDialog.Trigger asChild>
                 {children}
             </AlertDialog.Trigger>
             <AlertDialog.Portal>
-			<AlertDialog.Overlay class="fixed inset-0 bg-black/70" />
-			<AlertDialog.Content class="fixed left-1/2 top-1/2 my-10 h-full w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-100 overflow-y-auto">
-				<AlertDialog.Title class="w-full h-auto flex-col justify-center items-center relative">
+			<AlertDialog.Overlay className="fixed inset-0 bg-black/70" />
+			<AlertDialog.Content className="fixed left-1/2 top-1/2 my-10 h-full w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-100 overflow-y-auto">
+				<AlertDialog.Title className="w-full h-auto flex-col justify-center items-center relative">
 
-					<div className="relative w-full flex justify-center  items-center">
-                    	<img class={"w-full rounded-b-lg z"} src={`https://image.tmdb.org/t/p/w500${props.backdrop_path}`} alt="Banner do filme"/>
+					<div className="relative w-full flex justify-center items-center">
+                        <AlertDialog.Cancel asChild>
+                            <button
+                                type="button"
+                                aria-label="Fechar modal"
+                                className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-xl font-bold text-white shadow-lg backdrop-blur-sm transition hover:bg-black/80"
+                            >
+                                ×
+                            </button>
+                        </AlertDialog.Cancel>
+						<img className={"w-full rounded-b-lg"} src={`https://image.tmdb.org/t/p/w500${props.backdrop_path}`} alt="Banner do filme"/>
 						<span className="z-10 absolute bg-ink/70"/>
                     	<img className={"absolute z-10 top-1/3 border"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`} alt="Poster do filme" />
 
@@ -28,7 +35,7 @@ export default function DialogModal({children,props, credits, actors, providers}
 					<div className={"h-30"} />
 
 				</AlertDialog.Title>
-				<AlertDialog.Description class=" px-4 py-2 mb-5 mt-3.75 text-[15px] leading-normal text-mauve11">
+				<AlertDialog.Description class=" px-4 py-12 mb-5 mt-3.75 text-[15px] leading-normal text-mauve11">
 					<span className={"flex font-sans gap-2 items-center"}>
 						<p className={"text-white font-bold py-1 px-2 text-[9px] bg-ink"}>FICHA TÉCNICA</p>
 						<p className={"text-gray-400"}>{props.release_date[0]}{props.release_date[1]}{props.release_date[2]}{props.release_date[3]}</p>
@@ -79,7 +86,7 @@ export default function DialogModal({children,props, credits, actors, providers}
 				  </div>
 
 				  <div>
-					<h4>ONDE ASSISTIR</h4>
+					<h4 className="font-sans text-gray-600 text-[12px] my-5">ONDE ASSISTIR</h4>
 
 					{
 					  providers.map((provider) => {

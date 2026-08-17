@@ -41,6 +41,8 @@ export default function App() {
         }
       });
 
+      const providers = await api.get(`/movie/${filmsToRandom[random].id}`);
+
       const credits = await api.get(`/movie/${filmsToRandom[random].id}/credits`, {
         params: {
           language: "pt-BR"

@@ -2,12 +2,13 @@ import { FaDice } from "react-icons/fa"
 import { IoStarSharp } from "react-icons/io5"
 import DialogModal from "../DialogModal"
 import { api } from "../../service/api";
+import { useState } from "react";
 
 
 export default function Card({isActive, props, start, credits}) {
     let actorInFilm = []
     let director;
-    let providersInBrazil;
+    const [providers, setProviders] = useState([])
 
     if (isActive) {
         actorInFilm = [credits.cast[0], credits.cast[1], credits.cast[2]]
@@ -19,9 +20,13 @@ export default function Card({isActive, props, start, credits}) {
             language: "pt-BR",
           }
           });
-          
-          providersInBrazil = response.data.results["BR"]["buy"];
-          console.log(providersInBrazil)
+
+          if(response.data.results["BR"]["buy"] === undefined) {
+            setProviders(response.data.results["BR"]["rent"]);
+          } else {
+            setProviders(response.data.results["BR"]["buy"])
+          }
+    
 
         }
 
@@ -38,7 +43,7 @@ export default function Card({isActive, props, start, credits}) {
             {isActive ? (
                 <div class={"flex py-5 justify-center items-center flex-col font-medium"}>
 
-                  <DialogModal props={props} credits={director} actors={actorInFilm} providers={providersInBrazil}>
+                  <DialogModal props={props} credits={director} actors={actorInFilm} providers={providers}>
                     <img class={"cursor-pointer h-55"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
                   </DialogModal>
 

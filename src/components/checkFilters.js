@@ -3,27 +3,33 @@ import { api } from "../service/api";
 
 
 export const checkFilters = async (chooseGenre, actor, i, actorInformation) =>  {
+  const data = new Date();
+  const formattedDate = data.toISOString().slice(0, 10);
 
   let response;
   if (chooseGenre === 0 && actor === "") {
       response = await api.get(`/discover/movie`, {
         params: {
           language: "pt-BR",
-          page: i
+          page: i,
+          with_release_type: "4",
+          "release_date.lte": formattedDate
         }
       });
 
-
     }
 
-  if (chooseGenre === "" && actor !== "") {
+  if (chooseGenre === "" && actor.length > 0) {
     response = api.get(`/discover/movie`, {
       params: {
         with_cast: actorInformation.id,
-        language: "pt-BR"
+        language: "pt-BR",
+        with_release_type: "4",
+        "release_date.lte": formattedDate
       }
     })
 
+    console.log("b")
   }
 
 
@@ -32,18 +38,22 @@ export const checkFilters = async (chooseGenre, actor, i, actorInformation) =>  
       params: {
         with_cast: actorInformation.id,
         with_genres: chooseGenre,
-        language: "pt-BR"
+        language: "pt-BR",
+        with_release_type: "4",
+        "release_date.lte": formattedDate
       }
     }
+    
   )
-  
-  console.log(response.data)
+  console.log("c")
     
   } else {
     response = await api.get(`/discover/movie`, {
       params: {
         with_genres: chooseGenre,
-        language: "pt-BR"
+        language: "pt-BR",
+        with_release_type: "4",
+        "release_date.lte": formattedDate
       }
     })
 

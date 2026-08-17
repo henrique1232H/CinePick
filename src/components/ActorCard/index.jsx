@@ -4,6 +4,21 @@ import { MdDone } from "react-icons/md";
 
 export default function ActorCard({actorInformation, loading, actor}) {
 
+    const checkKnownFor = () => {
+        if (loading === false) {            
+            if (actorInformation.known_for.length === 0) {
+                return "Não tem um trabalho registrado"
+            } else if (actorInformation.known_for[0].title === undefined) {
+                return actorInformation.known_for[0].name
+            } else {
+                return `${actorInformation.known_for[0].title} (${actorInformation.known_for[0].original_title})`
+            }
+        }
+    }
+
+    const check = checkKnownFor()
+
+
     return (
             <div className={"bg-ink p-3 my-5 border-l-4 border-accent"}>
                 <div className={"flex justify-between items-center"}>
@@ -36,7 +51,7 @@ export default function ActorCard({actorInformation, loading, actor}) {
                         <p className={"flex items-center text-[9px] gap-2 text-white/80"}>
                           <IoStarSharp fontSize={13} className={""}/>
                           Destaque:
-                          <span className={"text-accent"}>{actorInformation.known_for.length === 0 ? "Não tem um trabalho registrado" : `${actorInformation.known_for[0].title} (${actorInformation.known_for[0].original_title}) `}</span>
+                          <span className={"text-accent"}>{check}</span>
                         </p>
                       </span>
 

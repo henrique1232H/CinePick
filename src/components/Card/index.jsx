@@ -1,15 +1,35 @@
 import { FaDice } from "react-icons/fa"
 import { IoStarSharp } from "react-icons/io5"
 import DialogModal from "../DialogModal"
+import { api } from "../../service/api";
 
 
 export default function Card({isActive, props, start, credits}) {
     let actorInFilm = []
+    let director;
+    let providersInBrazil;
 
     if (isActive) {
         actorInFilm = [credits.cast[0], credits.cast[1], credits.cast[2]]
-        console.log(props)
+        director = credits.crew.filter((e) => e.job === "Director");
+
+        const checkProviders = async () => {
+          const response = await api.get(`/movie/${props.id}/watch/providers`, {
+            params: {
+            language: "pt-BR",
+          }
+          });
+          
+          providersInBrazil = response.data.results["BR"]["buy"];
+          console.log(providersInBrazil)
+
+        }
+
+        checkProviders()
+
     }
+
+
 
     
 
@@ -18,7 +38,7 @@ export default function Card({isActive, props, start, credits}) {
             {isActive ? (
                 <div class={"flex py-5 justify-center items-center flex-col font-medium"}>
 
-                  <DialogModal props={props}>
+                  <DialogModal props={props} credits={director} actors={actorInFilm} providers={providersInBrazil}>
                     <img class={"cursor-pointer h-55"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
                   </DialogModal>
 
@@ -29,7 +49,7 @@ export default function Card({isActive, props, start, credits}) {
                   </div>
 
                   <h2 class={"italic text-lg"}> {props.title} </h2>
-                  <h3 class={"text-gray-300"}> {(credits.crew[0].name).toUpperCase()} </h3>
+                  <h3 class={"text-gray-300"}> {(director[0].name).toUpperCase()} </h3>
 
                   <div class={"my-4 flex gap-1 flex-wrap items-center justify-center"}>
                     {
@@ -60,7 +80,7 @@ export default function Card({isActive, props, start, credits}) {
                     <h4>Elenco:</h4>
 
                     {actorInFilm.map((actor) => {
-                        return <p key={actor.id} class={"text-gray-400 text-sm"}> {actor.name}</p>
+                        return <p key={actor.id} class={"text-gray-400 text-sm"}> {actor.name},</p>
                     })}
                   </div>
 

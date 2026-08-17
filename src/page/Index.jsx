@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-assignment */
 import { useEffect, useState } from 'react'
 import { api } from '../service/api'
 import Header from '../components/Header'
@@ -6,7 +5,7 @@ import authenticantion from '../service/authenticantion'
 import Card from '../components/Card'
 import { IoIosFunnel } from 'react-icons/io'
 import SelectInput from '../components/SelectInput'
-import { FaRegUser } from 'react-icons/fa'
+import { FaDice, FaRegUser } from 'react-icons/fa'
 import ActorCard from '../components/ActorCard'
 import {checkFilters} from '../components/checkFilters'
 
@@ -24,10 +23,8 @@ export default function App() {
     const searchFilm = async () => {
       let filmsToRandom = []
       let response;
-
+      
       for(let i = 1; i <= 5; i++) {
-
-        console.log(actorInformation)
         response = await checkFilters(chooseGenre, actor, i, actorInformation);
     
         response.results.forEach(filmInArray => {
@@ -35,10 +32,20 @@ export default function App() {
         })
         i++
       }
+            
       const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
 
-      const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}?language=pt-BR`)
-      const credits = await api.get(`/movie/${filmsToRandom[random].id}/credits?language=pt-BR`);
+      const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
+        params: {
+          language: "pt-BR"
+        }
+      });
+
+      const credits = await api.get(`/movie/${filmsToRandom[random].id}/credits`, {
+        params: {
+          language: "pt-BR"
+        }
+      });
 
       setFilmChoose(filmCorrect.data)
       setCreditsForFilm(credits.data)
@@ -48,7 +55,11 @@ export default function App() {
     useEffect(() => {
 
     const checkMovieList = async () => {
-      const response = await api.get("/genre/movie/list?language=pt-BR");
+      const response = await api.get("/genre/movie/list", {
+        params: {
+          language: "pt-BR"
+        }
+      });
       setGenres(response.data.genres)
     }
 
@@ -70,16 +81,23 @@ export default function App() {
   useEffect(() => {
 
      const searchActor = async () => {
-     let response;
+     let checkOnlyActor;
       try {
         setLoading(true)
-        response = await api.get(`/search/person?query=${actor}&language=pt-BR`);
+        const response = await api.get(`/search/person?query=${actor}`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
 
+        checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting");     
+        
       } catch (err) {
         console.log(err)
       } finally {
+
         setLoading(false)
-        setActorInformation(response.data.results[0])
+        setActorInformation(checkOnlyActor[0])
       }
      }
 
@@ -100,7 +118,7 @@ export default function App() {
       </div>
 
       <div className={"bg-surface mx-3 my-4 p-5 rounded-lg border-neutral-300 border-b font-sans"}>
-        <div className={"flex items-center gap-3 pb-3 border-b-1 border-b-gray-600"}>
+        <div className={"flex items-center gap-3 pb-3 border-b border-b-gray-600"}>
           <IoIosFunnel fontSize={20} className={"text-accent"}/>
           <h3 className={"italic text-ink"}>Filtros de Escolha</h3>
         </div>
@@ -118,17 +136,23 @@ export default function App() {
             </h4>
 
             {
-              actor.length > 1 && <p className={"text-[10px] text-accent font-bold cursor-pointer hover:border-b-1"} onClick={() => setActor("")}>LIMPAR </p>
+              actor.length > 1 && <p className={"text-[10px] text-accent font-bold cursor-pointer hover:border-b"} onClick={() => setActor("")}>LIMPAR </p>
             }
           </div>
-         <input type="text" className={"w-full p-3 bg-gray-100 border-gray-300 border-1"} value={actor} onChange={(e) => setActor(e.target.value)}/>
+         <input type="text" className={"w-full p-3 bg-gray-100 border-gray-300 border"} value={actor} onChange={(e) => setActor(e.target.value)}/>
           {
             actor.length > 1 && (
               <ActorCard  actorInformation={actorInformation} loading={loading} actor={actor}/>
             )
           }
         </div>
-
+        
+        <div className={"flex items-center justify-center"}>
+          <button onClick={(e) => searchFilm()} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer w-full"}>
+              <FaDice fontSize={20} class={"text-accent"}/>
+              GIRAR ROLETA AGORA
+          </button>
+        </div>
 
       </div>
       </main>

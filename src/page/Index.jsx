@@ -55,6 +55,7 @@ export default function App() {
         });
 
         trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer");
+        console.log(trailerForFilm)
 
         const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
           params: {

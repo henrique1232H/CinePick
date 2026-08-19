@@ -66,7 +66,7 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                   </div>
 
                   {
-                    trailer[0].key !== undefined && (
+                    trailer.length > 0 && (
                       <div class={"mt-6 w-full"}>
                         <a href={`https://www.youtube.com/watch?v=${trailer[0].key}`}> 
                           <button class={"bg-ink w-full block p-3 text-white cursor-pointer font-bold font-sans"}> TRAILER</button>

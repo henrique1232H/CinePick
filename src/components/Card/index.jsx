@@ -1,8 +1,9 @@
 import { FaDice } from "react-icons/fa"
 import { IoStarSharp } from "react-icons/io5"
 import DialogModal from "../DialogModal"
+import { Ring } from "ldrs/react";
 
-export default function Card({isActive, props, start, credits, providersInFilm, trailer}) {
+export default function Card({isActive, props, start, credits, providersInFilm, trailer, loadingButton}) {
     let actorInFilm = []
     let director;
     let date;
@@ -64,11 +65,16 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                     })}
                   </div>
 
-                  <div class={"mt-6 w-full"}>
-                    <a href={`https://www.youtube.com/watch?v=${trailer[0].key}`}> 
-                      <button class={"bg-ink w-full block p-3 text-white cursor-pointer font-bold font-sans"}> TRAILER</button>
-                    </a>
-                  </div>
+                  {
+                    trailer[0].key !== undefined && (
+                      <div class={"mt-6 w-full"}>
+                        <a href={`https://www.youtube.com/watch?v=${trailer[0].key}`}> 
+                          <button class={"bg-ink w-full block p-3 text-white cursor-pointer font-bold font-sans"}> TRAILER</button>
+                        </a>
+                      </div>
+                    )
+                  }
+
 
 
                 </div>
@@ -80,10 +86,23 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                     <h3 class={"italic text-2xl mt-3"}>Pronto para a Escolha Perfeita?</h3>
                     <p class={"text-xs text-gray-700 font-sans font-medium w-80"}>Nenhum filme selecionado ainda. Ajuste seus filtros de gênero ou ator ao lado e clique no botão abaixo para girar a roleta.</p>
 
-                    <button onClick={start} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer"}>
-                        <FaDice fontSize={20} class={"text-accent"}/>
-                        GIRAR ROLETA AGORA
-                    </button>
+          <button onClick={start} disabled={loadingButton} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer"}>
+              {
+                loadingButton ? 
+                (<span className={"flex items-center gap-2"}>
+                   <Ring size={"30"} color="#fff"/>
+                   Espere o filme ser escolhido
+                </span>) : 
+                
+                (<span className={"flex gap-2 items-center"}> 
+
+                  <FaDice fontSize={20} class={"text-accent"}/>
+  
+                  GIRAR ROLETA AGORA
+
+                </span>)
+              }
+          </button>
                 </div>
             )}
         </div>

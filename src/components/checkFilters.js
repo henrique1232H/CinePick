@@ -6,8 +6,6 @@ export const checkFilters = async (chooseGenre, actor, i, actorInformation) =>  
   const data = new Date();
   const formattedDate = data.toISOString().slice(0, 10);
 
-  console.log(i)
-
   let response;
   if (chooseGenre === 0 && actor === "") {
       response = await api.get(`/discover/movie`, {

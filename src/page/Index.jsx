@@ -8,6 +8,7 @@ import SelectInput from '../components/SelectInput'
 import { FaDice, FaRegUser } from 'react-icons/fa'
 import ActorCard from '../components/ActorCard'
 import {checkFilters} from '../components/checkFilters'
+import { Ring } from 'ldrs/react'
 
 export default function App() {
 
@@ -21,53 +22,63 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [providers, setProviders] = useState([]);
   const [trailer, setTrailer] = useState([]);
+  const [loadingButton, setLoadingButton] = useState(false);
 
     const searchFilm = async () => {
+      setLoadingButton(true)
       let filmsToRandom = []
       let response;
-      
-      for(let i = 1; i <= 5; i++) {
-        response = await checkFilters(chooseGenre, actor, i, actorInformation);
-    
-        response.results.forEach(filmInArray => {
-          filmsToRandom = [...filmsToRandom, filmInArray];
-        })
-        i++
+
+
+      try {
+        for(let i = 1; i <= 5; i++) {
+          response = await checkFilters(chooseGenre, actor, i, actorInformation);
+          
+          response.results.forEach(filmInArray => {
+            filmsToRandom = [...filmsToRandom, filmInArray];
+          })
+          i++
+        }
+              
+        const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
+
+        const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
+
+        let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
+
+        trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer");
+
+        const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
+
+        const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
+
+        
+        setTrailer(trailerForFilm)
+        setProviders(providersToFilm.data.results["BR"]["flatrate"]);
+        setFilmChoose(filmCorrect.data)
+        setCreditsForFilm(credits.data)
+        setRunRollet(true)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setLoadingButton(false)
       }
-            
-      const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
-
-      const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
-        params: {
-          language: "pt-BR"
-        }
-      });
-
-      let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`, {
-        params: {
-          language: "pt-BR"
-        }
-      });
-
-      trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer");
-
-      const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
-        params: {
-          language: "pt-BR"
-        }
-      });
-
-      const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
-        params: {
-          language: "pt-BR"
-        }
-      });
-      
-      setTrailer(trailerForFilm)
-      setProviders(providersToFilm.data.results["BR"]["flatrate"]);
-      setFilmChoose(filmCorrect.data)
-      setCreditsForFilm(credits.data)
-      setRunRollet(true)
     }
     
     useEffect(() => {
@@ -122,6 +133,7 @@ export default function App() {
      searchActor()
   }, [actor])
 
+
   return (
     <>
       <Header />
@@ -132,7 +144,7 @@ export default function App() {
        <h2 className={"text-4xl text-ink italic"}>Sorteie o <span className={"text-accent"}>filme perfeito</span></h2>
        <p className={"text-xs text-gray-600 font-sans font-medium mt-3"}>Defina gênero ou autor de preferência e deixe nossa roleta escolher o filme ideal para a sua noite.</p>
 
-       <Card isActive={runRollet} props={filmChoose} start={searchFilm} credits={creditsForFilm} providersInFilm={providers} trailer={trailer}/>
+       <Card isActive={runRollet} props={filmChoose} start={searchFilm} credits={creditsForFilm} providersInFilm={providers} trailer={trailer} loadingButton={loadingButton}/>
       </div>
 
       <div className={"bg-surface mx-3 my-4 p-5 rounded-lg border-neutral-300 border-b font-sans"}>
@@ -166,9 +178,22 @@ export default function App() {
         </div>
         
         <div className={"flex items-center justify-center"}>
-          <button onClick={() => searchFilm()} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer w-full"}>
-              <FaDice fontSize={20} class={"text-accent"}/>
-              GIRAR ROLETA AGORA
+          <button onClick={() => {searchFilm()}} disabled={loadingButton} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer w-full"}>
+              {
+                loadingButton ? 
+                (<span className={"flex items-center gap-2"}>
+                   <Ring size={"30"} color="#fff"/>
+                   Espere o filme ser escolhido
+                </span>) : 
+                
+                (<span className={"flex gap-2 items-center"}> 
+
+                  <FaDice fontSize={20} class={"text-accent"}/>
+  
+                  GIRAR ROLETA AGORA
+
+                </span>)
+              }
           </button>
         </div>
 

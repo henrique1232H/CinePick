@@ -1,54 +1,29 @@
 import { FaDice } from "react-icons/fa"
 import { IoStarSharp } from "react-icons/io5"
 import DialogModal from "../DialogModal"
-import { api } from "../../service/api";
-import { useState } from "react";
 
-
-export default function Card({isActive, props, start, credits}) {
+export default function Card({isActive, props, start, credits, providersInFilm, trailer}) {
     let actorInFilm = []
     let director;
-    const [providers, setProviders] = useState([])
-
+    let date;
+    
     if (isActive) {
         actorInFilm = [credits.cast[0], credits.cast[1], credits.cast[2]]
         director = credits.crew.filter((e) => e.job === "Director");
-
-        const checkProviders = async () => {
-          const response = await api.get(`/movie/${props.id}/watch/providers`, {
-            params: {
-            language: "pt-BR",
-          }
-          });
-
-          if(response.data.results["BR"]["buy"] === undefined) {
-            setProviders(response.data.results["BR"]["rent"]);
-          } else {
-            setProviders(response.data.results["BR"]["buy"])
-          }
-    
-
-        }
-
-        checkProviders()
-
+        date = new Date(props.release_date).getFullYear();
     }
-
-
-
-    
 
     return (
         <div class={"bg-surface mx-3 my-4 p-5 px-9 flex-wrap rounded-lg border-neutral-300 border-b font-sans"}>
             {isActive ? (
                 <div class={"flex py-5 justify-center items-center flex-col font-medium"}>
 
-                  <DialogModal props={props} credits={director} actors={actorInFilm} providers={providers}>
+                  <DialogModal props={props} credits={director} actors={actorInFilm} providers={providersInFilm}>
                     <img class={"cursor-pointer h-55"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
                   </DialogModal>
 
                   <div class={"flex items-center justify-center gap-4 my-3"}>
-                    <span class={"bg-ink text-white text-sm px-2 py-1"}>{props.release_date[0]}{props.release_date[1]}{props.release_date[2]}{props.release_date[3]}</span>
+                    <span class={"bg-ink text-white text-sm px-2 py-1"}>{date}</span>
                     <span class={"flex items-center justify-center gap-1 text-accent bg-neutral-200 border-neutral-300 rounded-lg border-2  py-1 px-2 text-sm "}> <IoStarSharp/> {Math.round(props.vote_average)} / 10 </span>
                     <span class={" border-neutral-300 border-2 text-gray-300 px-2"}>{props.runtime} min</span>
                   </div>
@@ -90,7 +65,9 @@ export default function Card({isActive, props, start, credits}) {
                   </div>
 
                   <div class={"mt-6 w-full"}>
-                    <button class={"bg-ink w-full block p-3 text-white cursor-pointer font-bold font-sans"}> TRAILER</button>
+                    <a href={`https://www.youtube.com/watch?v=${trailer[0].key}`}> 
+                      <button class={"bg-ink w-full block p-3 text-white cursor-pointer font-bold font-sans"}> TRAILER</button>
+                    </a>
                   </div>
 
 

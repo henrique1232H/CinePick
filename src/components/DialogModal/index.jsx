@@ -1,10 +1,9 @@
 import { AlertDialog } from "radix-ui";
 import { GiFilmStrip } from "react-icons/gi";
 import { IoStarSharp } from "react-icons/io5";
-import { api } from "../../service/api";
-
 
 export default function DialogModal({children,props, credits, actors, providers}) {
+	const date = new Date(props.release_date).getFullYear();
 
     return (
         <AlertDialog.Root>
@@ -38,7 +37,7 @@ export default function DialogModal({children,props, credits, actors, providers}
 				<AlertDialog.Description class=" px-4 py-12 mb-5 mt-3.75 text-[15px] leading-normal text-mauve11">
 					<span className={"flex font-sans gap-2 items-center"}>
 						<p className={"text-white font-bold py-1 px-2 text-[9px] bg-ink"}>FICHA TÉCNICA</p>
-						<p className={"text-gray-400"}>{props.release_date[0]}{props.release_date[1]}{props.release_date[2]}{props.release_date[3]}</p>
+						<p className={"text-gray-400"}>{date}</p>
 					</span>
 
 					<h1 className={"mt-3 text-2xl italic"}>{props.title}</h1>
@@ -85,14 +84,17 @@ export default function DialogModal({children,props, credits, actors, providers}
 
 				  </div>
 
-				  <div>
+				  <div className={""}>
 					<h4 className="font-sans text-gray-600 text-[12px] my-5">ONDE ASSISTIR</h4>
 
-					{
-					  providers.map((provider) => {
-						return <span key={provider.id} class={"text-[10px] border-gray-300 bg-white border font-semibold font-sans mr-2 py-1 px-3"}> {(provider.provider_name)} </span>
-					  })
-					}
+					<div className={"flex flex-wrap gap-2"}> 
+						{
+							providers.map((provider) => {
+								return <span key={provider.id} className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}> {(provider.provider_name)} </span>
+							})
+						}
+						<span className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}> Stremio </span>
+					</div>
 
 
 				  </div>

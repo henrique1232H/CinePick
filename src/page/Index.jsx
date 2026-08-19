@@ -19,6 +19,8 @@ export default function App() {
   const [actor, setActor] = useState("");
   const [actorInformation, setActorInformation] = useState([])
   const [loading, setLoading] = useState(true);
+  const [providers, setProviders] = useState([]);
+  const [trailer, setTrailer] = useState([]);
 
     const searchFilm = async () => {
       let filmsToRandom = []
@@ -41,14 +43,28 @@ export default function App() {
         }
       });
 
-      const providers = await api.get(`/movie/${filmsToRandom[random].id}`);
-
-      const credits = await api.get(`/movie/${filmsToRandom[random].id}/credits`, {
+      let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`, {
         params: {
           language: "pt-BR"
         }
       });
 
+      trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer");
+
+      const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
+        params: {
+          language: "pt-BR"
+        }
+      });
+
+      const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
+        params: {
+          language: "pt-BR"
+        }
+      });
+      
+      setTrailer(trailerForFilm)
+      setProviders(providersToFilm.data.results["BR"]["flatrate"]);
       setFilmChoose(filmCorrect.data)
       setCreditsForFilm(credits.data)
       setRunRollet(true)
@@ -116,7 +132,7 @@ export default function App() {
        <h2 className={"text-4xl text-ink italic"}>Sorteie o <span className={"text-accent"}>filme perfeito</span></h2>
        <p className={"text-xs text-gray-600 font-sans font-medium mt-3"}>Defina gênero ou autor de preferência e deixe nossa roleta escolher o filme ideal para a sua noite.</p>
 
-       <Card isActive={runRollet} props={filmChoose} start={searchFilm} credits={creditsForFilm}/>
+       <Card isActive={runRollet} props={filmChoose} start={searchFilm} credits={creditsForFilm} providersInFilm={providers} trailer={trailer}/>
       </div>
 
       <div className={"bg-surface mx-3 my-4 p-5 rounded-lg border-neutral-300 border-b font-sans"}>
@@ -150,7 +166,7 @@ export default function App() {
         </div>
         
         <div className={"flex items-center justify-center"}>
-          <button onClick={(e) => searchFilm()} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer w-full"}>
+          <button onClick={() => searchFilm()} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer w-full"}>
               <FaDice fontSize={20} class={"text-accent"}/>
               GIRAR ROLETA AGORA
           </button>

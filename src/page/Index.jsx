@@ -2,13 +2,10 @@ import { useEffect, useState } from 'react'
 import { api } from '../service/api'
 import Header from '../components/Header'
 import authenticantion from '../service/authenticantion'
-import Card from '../components/Card'
-import { IoIosFunnel } from 'react-icons/io'
-import SelectInput from '../components/SelectInput'
-import { FaDice, FaRegUser } from 'react-icons/fa'
-import ActorCard from '../components/ActorCard'
-import {checkFilters} from '../components/checkFilters'
-import { Ring } from 'ldrs/react'
+import SortFilms from '../components/SortFilms'
+import { checkFilters } from '../components/checkFilters'
+import { FaDice, FaRegSave } from 'react-icons/fa'
+import ListFilm from '../components/ListFilms'
 
 export default function App() {
 
@@ -23,6 +20,9 @@ export default function App() {
   const [providers, setProviders] = useState([]);
   const [trailer, setTrailer] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
+  const [changePage, setChangePage] = useState(false);
+  const [saveFilm, setSaveFilm] = useState(false);
+  const [listFilmsSave, setFilmsSave] = useState([])
 
     const searchFilm = async () => {
       setLoadingButton(true)
@@ -55,7 +55,6 @@ export default function App() {
         });
 
         trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer");
-        console.log(trailerForFilm)
 
         const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
           params: {
@@ -120,7 +119,7 @@ export default function App() {
           }
         });
 
-        checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting");     
+        checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting");
         
       } catch (err) {
         console.log(err)
@@ -139,67 +138,48 @@ export default function App() {
     <>
       <Header />
 
-      <main className={"px-2 mx-4 my-3"}>
-      
-      <div className={""}>
-       <h2 className={"text-4xl text-ink italic"}>Sorteie o <span className={"text-accent"}>filme perfeito</span></h2>
-       <p className={"text-xs text-gray-600 font-sans font-medium mt-3"}>Defina gênero ou autor de preferência e deixe nossa roleta escolher o filme ideal para a sua noite.</p>
+      <main className={"px-2 mx-4 my-20"}>
 
-       <Card isActive={runRollet} props={filmChoose} start={searchFilm} credits={creditsForFilm} providersInFilm={providers} trailer={trailer} loadingButton={loadingButton}/>
-      </div>
+        {
+          !changePage ? (
+            <SortFilms
+              runRollet={runRollet}
+              filmChoose={filmChoose}
+              searchFilm={searchFilm}
+              creditsForFilm={creditsForFilm}
+              providers={providers}
+              trailer={trailer}
+              loadingButton={loadingButton}
+              genres={genres}
+              setChooseGenre={setChooseGenre}
+              actor={actor}
+              clear={() => setActor("")}
+              change={(e) => setActor(e.target.value)}
+              actorInformation={actorInformation}
+              loading={loading}
+    
+            />
+          ): <ListFilm listForFilms={listFilmsSave}/>
+        }
+      </main>
 
-      <div className={"bg-surface mx-3 my-4 p-5 rounded-lg border-neutral-300 border-b font-sans"}>
-        <div className={"flex items-center gap-3 pb-3 border-b border-b-gray-600"}>
-          <IoIosFunnel fontSize={20} className={"text-accent"}/>
-          <h3 className={"italic text-ink"}>Filtros de Escolha</h3>
-        </div>
+      <div className={"fixed bottom-0 w-full p-5 bg-white border-t-gray-200 border-t"}> 
+        <div className={"flex justify-around gap-3 items-center font-sans font-semibold"}>
+          <button className={`flex items-center flex-col transition-all hover:${!changePage ? "text-accent" : "text-ink-hover"} cursor-pointer ${!changePage ? "text-accent" : "text-gray-300"}`} onClick={() => {
+            setChangePage(false)
+          }}>
+            <FaDice fontSize={"#fff"}/>
+            SORTEIO
+          </button>
 
-        <div className={"mt-5"}>
-          <h4 className={"text-[12px] text-gray-600 font-bold mb-2"}>GÊNERO</h4>
-          <SelectInput genres={genres} setGenres={setChooseGenre}/>
-        </div>
-
-        <div className={"my-5"}>
-
-          <div className={"flex justify-between items-center"}>
-            <h4 className={"flex items-center gap-1 mt-3 text-[12px] text-gray-600 font-bold mb-2"}>
-              <FaRegUser fontSize={15} className={"text-accent"}/> ATOR OU ATRIZ
-            </h4>
-
-            {
-              actor.length > 1 && <p className={"text-[10px] text-accent font-bold cursor-pointer hover:border-b"} onClick={() => setActor("")}>LIMPAR </p>
-            }
-          </div>
-         <input type="text" className={"w-full p-3 bg-gray-100 border-gray-300 border"} value={actor} onChange={(e) => setActor(e.target.value)}/>
-          {
-            actor.length > 1 && (
-              <ActorCard  actorInformation={actorInformation} loading={loading} actor={actor}/>
-            )
-          }
-        </div>
-        
-        <div className={"flex items-center justify-center"}>
-          <button onClick={() => {searchFilm()}} disabled={loadingButton} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer w-full"}>
-              {
-                loadingButton ? 
-                (<span className={"flex items-center gap-2"}>
-                   <Ring size={"30"} color="#fff"/>
-                   Espere o filme ser escolhido
-                </span>) : 
-                
-                (<span className={"flex gap-2 items-center"}> 
-
-                  <FaDice fontSize={20} class={"text-accent"}/>
-  
-                  GIRAR ROLETA AGORA
-
-                </span>)
-              }
+          <button className={`flex items-center transition-all hover:${changePage ? "text-accent" : "text-ink-hover"} flex-col cursor-pointer ${changePage ? "text-accent" : "text-gray-300"}`} onClick={() => {
+            setChangePage(true)
+          }}>
+            <FaRegSave/>
+            SALVOS
           </button>
         </div>
-
       </div>
-      </main>
 
     
     </>

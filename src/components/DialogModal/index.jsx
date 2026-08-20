@@ -99,6 +99,12 @@ export default function DialogModal({children,props, credits, actors, providers}
 
 				  </div>
 
+				  <div>
+					<button>
+						 
+					</button>
+				  </div>
+
 
 				</AlertDialog.Description>
 			</AlertDialog.Content>

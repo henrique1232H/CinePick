@@ -1,7 +1,7 @@
 import { FaDice } from "react-icons/fa"
 import { IoStarSharp } from "react-icons/io5"
 import DialogModal from "../DialogModal"
-import { Ring } from "ldrs/react";
+import ButtonRollet from "../ButtonRollet";
 
 export default function Card({isActive, props, start, credits, providersInFilm, trailer, loadingButton}) {
     let actorInFilm = []
@@ -17,10 +17,10 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
     return (
         <div class={"bg-surface mx-3 my-4 p-5 px-9 flex-wrap rounded-lg border-neutral-300 border-b font-sans"}>
             {isActive ? (
-                <div class={"flex py-5 justify-center items-center flex-col font-medium"}>
+                <div class={"flex py-5 justify-center items-center flex-col"}>
 
                   <DialogModal props={props} credits={director} actors={actorInFilm} providers={providersInFilm}>
-                    <img class={"cursor-pointer h-55"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
+                    <img className={"cursor-pointer hover:bg-ink"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
                   </DialogModal>
 
                   <div class={"flex items-center justify-center gap-4 my-3"}>
@@ -29,8 +29,8 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                     <span class={" border-neutral-300 border-2 text-gray-300 px-2"}>{props.runtime} min</span>
                   </div>
 
-                  <h2 class={"italic text-lg"}> {props.title} </h2>
-                  <h3 class={"text-gray-300"}> {(director[0].name).toUpperCase()} </h3>
+                  <h2 class={"italic font-medium text-lg hover:text-accent"}> {props.title} </h2>
+                  <h3 class={"text-gray-300"}> {(director[0].name).toUpperCase()} - {date} </h3>
 
                   <div class={"my-4 flex gap-1 flex-wrap items-center justify-center"}>
                     {
@@ -80,29 +80,13 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                 </div>
             ): (
                 <div class={"mt-6 py-5 flex justify-center items-center flex-col gap-5"}>
-                    <span class={"bg-ink flex justify-center items-center h-15 w-15 border-accent border-2"}>
+                    <span class={"bg-ink flex justify-center flex-wrap items-center h-15 w-15 border-accent border-2"}>
                         <FaDice fontSize={35} class={"text-accent"}/>
                     </span>
                     <h3 class={"italic text-2xl mt-3"}>Pronto para a Escolha Perfeita?</h3>
                     <p class={"text-xs text-gray-700 font-sans font-medium w-80"}>Nenhum filme selecionado ainda. Ajuste seus filtros de gênero ou ator ao lado e clique no botão abaixo para girar a roleta.</p>
 
-          <button onClick={start} disabled={loadingButton} class={"bg-ink flex items-center justify-center gap-2 px-6 py-3 border-accent border-2 text-white font-sans font-semibold cursor-pointer"}>
-              {
-                loadingButton ? 
-                (<span className={"flex items-center gap-2"}>
-                   <Ring size={"30"} color="#fff"/>
-                   Espere o filme ser escolhido
-                </span>) : 
-                
-                (<span className={"flex gap-2 items-center"}> 
-
-                  <FaDice fontSize={20} class={"text-accent"}/>
-  
-                  GIRAR ROLETA AGORA
-
-                </span>)
-              }
-          </button>
+                <ButtonRollet start={start} loadingButton={loadingButton}/>
                 </div>
             )}
         </div>

@@ -1,9 +1,10 @@
-import { FaDice } from "react-icons/fa"
+import { FaDice, FaPlay } from "react-icons/fa"
 import { IoStarSharp } from "react-icons/io5"
 import DialogModal from "../DialogModal"
 import ButtonRollet from "../ButtonRollet";
 
-export default function Card({isActive, props, start, credits, providersInFilm, trailer, loadingButton}) {
+
+export default function Card({isActive, props, start, credits, providersInFilm, trailer, loadingButton, save, saveButton}) {
     let actorInFilm = []
     let director;
     let date;
@@ -20,17 +21,17 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                 <div class={"flex py-5 justify-center items-center flex-col"}>
 
                   <DialogModal props={props} credits={director} actors={actorInFilm} providers={providersInFilm}>
-                    <img className={"cursor-pointer hover:bg-ink"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
+                    <img className={"cursor-pointer shadow-lg shadow-gray-200"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
                   </DialogModal>
 
                   <div class={"flex items-center justify-center gap-4 my-3"}>
-                    <span class={"bg-ink text-white text-sm px-2 py-1"}>{date}</span>
-                    <span class={"flex items-center justify-center gap-1 text-accent bg-neutral-200 border-neutral-300 rounded-lg border-2  py-1 px-2 text-sm "}> <IoStarSharp/> {Math.round(props.vote_average)} / 10 </span>
-                    <span class={" border-neutral-300 border-2 text-gray-300 px-2"}>{props.runtime} min</span>
+                    <span class={"bg-ink text-white text-[9px] font-bold px-3 py-1"}>{date}</span>
+                    <span class={"flex items-center justify-center gap-1 text-accent bg-gray-100/70 border-neutral-300 border px-2 text-[12px] font-bold"}> <IoStarSharp/> {Math.round(props.vote_average)} / 10 </span>
+                    <span class={" border-neutral-300 border text-gray-300 px-2 text-[12px]"}>{props.runtime} min</span>
                   </div>
 
                   <h2 class={"italic font-medium text-lg hover:text-accent"}> {props.title} </h2>
-                  <h3 class={"text-gray-300"}> {(director[0].name).toUpperCase()} - {date} </h3>
+                  <h3 class={"text-gray-300 font-semibold"}> {(director[0].name).toUpperCase()} - {date} </h3>
 
                   <div class={"my-4 flex gap-1 flex-wrap items-center justify-center"}>
                     {
@@ -65,15 +66,26 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                     })}
                   </div>
 
-                  {
-                    trailer.length > 0 && (
-                      <div class={"mt-6 w-full"}>
-                        <a href={`https://www.youtube.com/watch?v=${trailer[0].key}`}> 
-                          <button class={"bg-ink w-full block p-3 text-white cursor-pointer font-bold font-sans"}> TRAILER</button>
+                  <div className={"flex items-center gap-2 mt-6 w-full"}>
+                    {
+                      trailer.length > 0 && (
+                        <a href={`https://www.youtube.com/watch?v=${trailer[0].key}`} className={"w-full"}>
+                          <button class={"bg-ink w-full flex items-center justify-center gap-1.5 px-6 py-3 text-white cursor-pointer font-bold font-sans transition-all hover:bg-ink-hover"}>
+                            <FaPlay />
+                            TRAILER
+                          </button>
                         </a>
-                      </div>
-                    )
-                  }
+                      )
+                    }
+
+                    <button onClick={save} className={`${!saveButton ? "bg-white" : "bg-accent text-white border-none"} w-full cursor-pointer text-ink border border-gray-300 p-3 font-semibold transition-all hover:${!saveButton  ? "bg-gray-100" : "bg-accent"}`}>
+                      {
+                        !saveButton ?  "SALVAR" : "SALVO"
+                      }
+                    </button>
+                  </div>
+
+
 
 
 

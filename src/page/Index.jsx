@@ -21,8 +21,9 @@ export default function App() {
   const [trailer, setTrailer] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
   const [changePage, setChangePage] = useState(false);
+
   const [saveFilm, setSaveFilm] = useState(false);
-  const [listFilmsSave, setFilmsSave] = useState([])
+  const [listFilmsSave, setListFilmsSave] = useState([])
 
     const searchFilm = async () => {
       setLoadingButton(true)
@@ -133,6 +134,7 @@ export default function App() {
      searchActor()
   }, [actor])
 
+  console.log(saveFilm)
 
   return (
     <>
@@ -157,6 +159,17 @@ export default function App() {
               change={(e) => setActor(e.target.value)}
               actorInformation={actorInformation}
               loading={loading}
+              saveButton={saveFilm}
+              save={() => {
+                if(saveFilm === false){
+                  setListFilmsSave((prevent) => [...prevent, filmChoose])
+                  setSaveFilm(true)
+                } else {
+                  const removeFilm = listFilmsSave.filter((e) => e.id !== filmChoose.id)
+                  setListFilmsSave(removeFilm)
+                  setSaveFilm(false)
+                }
+              }}
     
             />
           ): <ListFilm listForFilms={listFilmsSave}/>

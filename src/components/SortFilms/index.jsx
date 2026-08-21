@@ -20,7 +20,9 @@ export default function SortFilms({
     actorInformation,
     loading,
     clear,
-    change
+    change,
+    save,
+    saveButton
 }) {
 
     return (
@@ -29,7 +31,7 @@ export default function SortFilms({
                 <h2 className={"text-4xl text-ink italic"}>Sorteie o <span className={"text-accent"}>filme perfeito</span></h2>
                 <p className={"text-xs text-gray-600 font-sans font-medium mt-3"}>Defina gênero ou autor de preferência e deixe nossa roleta escolher o filme ideal para a sua noite.</p>
 
-                <Card isActive={runRollet} props={filmChoose} start={searchFilm} credits={creditsForFilm} providersInFilm={providers} trailer={trailer} loadingButton={loadingButton}/>
+                <Card saveButton={saveButton} save={save} isActive={runRollet} props={filmChoose} start={searchFilm} credits={creditsForFilm} providersInFilm={providers} trailer={trailer} loadingButton={loadingButton}/>
             </div>
 
             <div className={"bg-surface mx-3 my-4 p-5 rounded-lg border-neutral-300 border-b font-sans"}>

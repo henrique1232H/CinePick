@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaRegSave } from "react-icons/fa";
+import SalvFilmCard from "../SalvFimCard";
 
 
 export default function ListFilm({listForFilms}) {
@@ -37,8 +38,12 @@ export default function ListFilm({listForFilms}) {
 
             {
                 listForFilms.length !== 0 ? (
-                    <div> 
-                        asa
+                    <div className="border-gray-300 border-t pt-3 mt-5">
+                        {
+                            listForFilms.map((film) => {
+                                return <SalvFilmCard key={film.id} props={film}/>
+                            })
+                        }
                     </div>
                 ) : (
                     <div>

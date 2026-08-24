@@ -21,7 +21,7 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                 <div class={"flex py-5 justify-center items-center flex-col"}>
 
                   <DialogModal props={props} credits={director} actors={actorInFilm} providers={providersInFilm}>
-                    <img className={"cursor-pointer shadow-lg shadow-gray-200"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`}/>
+                    <img className={"cursor-pointer shadow-lg shadow-gray-200"} src={`https://image.tmdb.org/t/p/w200${props.poster_path}`} alt={props.title}/>
                   </DialogModal>
 
                   <div class={"flex items-center justify-center gap-4 my-3"}>
@@ -58,15 +58,21 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
 
                   <span class={"h-2 block w-full border-neutral-300 border-b my-3"}/>
 
-                  <div class={"flex flex-wrap gap-1 items-center"}>
+                  <div class={"flex text-[12px] justify-center flex-wrap gap-1 items-center"}>
                     <h4>Elenco:</h4>
 
                     {actorInFilm.map((actor) => {
-                        return <p key={actor.id} class={"text-gray-400 text-sm"}> {actor.name},</p>
+                        return <p key={actor.id} class={"text-gray-400"}> {actor.name},</p>
                     })}
                   </div>
 
-                  <div className={"flex items-center gap-2 mt-6 w-full"}>
+                  <div className="mt-4 mb-1 w-full font-semibold">
+                    <DialogModal props={props} credits={director} actors={actorInFilm} providers={providersInFilm}>
+                      <button className="bg-ink w-full p-2 text-white font-sans cursor-pointer hover:bg-ink/90 transition-all">VER FICHA TÉCNICA</button>
+                    </DialogModal>
+                  </div>
+
+                  <div className={"flex items-center gap-2 mt-1 w-full"}>
                     {
                       trailer.length > 0 && (
                         <a href={`https://www.youtube.com/watch?v=${trailer[0].key}`} className={"w-full"}>
@@ -78,7 +84,8 @@ export default function Card({isActive, props, start, credits, providersInFilm, 
                       )
                     }
 
-                    <button onClick={save} className={`${!saveButton ? "bg-white" : "bg-accent text-white border-none"} w-full cursor-pointer text-ink border border-gray-300 p-3 font-semibold transition-all hover:${!saveButton  ? "bg-gray-100" : "bg-accent"}`}>
+                    <button onClick={save} className={`${!saveButton ? "bg-white hover:bg-gray-100" : "bg-accent text-white border-none"}  w-full cursor-pointer text-ink border border-gray-300 p-3 font-semibold transition-all hover:${!saveButton  ? "bg-gray-100" : "bg-accent"}`}>
+                      
                       {
                         !saveButton ?  "SALVAR" : "SALVO"
                       }

@@ -11,8 +11,8 @@ export default function DialogModal({children,props, credits, actors, providers}
                 {children}
             </AlertDialog.Trigger>
             <AlertDialog.Portal>
-			<AlertDialog.Overlay className="fixed inset-0 bg-black/70" />
-			<AlertDialog.Content className="fixed left-1/2 top-1/2 my-10 h-full w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-100 overflow-y-auto">
+			<AlertDialog.Overlay className="modal-overlay fixed inset-0 bg-black/70" />
+			<AlertDialog.Content className="modal-content fixed left-1/2 top-1/2 my-10 h-full w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-100 overflow-y-auto">
 				<AlertDialog.Title className="w-full h-auto flex-col justify-center items-center relative">
 
 					<div className="relative w-full flex justify-center items-center">
@@ -20,7 +20,7 @@ export default function DialogModal({children,props, credits, actors, providers}
                             <button
                                 type="button"
                                 aria-label="Fechar modal"
-                                className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-xl font-bold text-white shadow-lg backdrop-blur-sm transition hover:bg-black/80"
+                                className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center  bg-black/60 text-xl font-bold text-white shadow-lg backdrop-blur-sm transition hover:bg-black/80"
                             >
                                 ×
                             </button>

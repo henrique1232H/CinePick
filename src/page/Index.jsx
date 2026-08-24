@@ -26,6 +26,7 @@ export default function App() {
   const [listFilmsSave, setListFilmsSave] = useState([])
 
     const searchFilm = async () => {
+      setSaveFilm(false)
       setLoadingButton(true)
       let filmsToRandom = []
       let response;
@@ -134,8 +135,6 @@ export default function App() {
      searchActor()
   }, [actor])
 
-  console.log(saveFilm)
-
   return (
     <>
       <Header />
@@ -176,16 +175,16 @@ export default function App() {
         }
       </main>
 
-      <div className={"fixed bottom-0 w-full p-5 bg-white border-t-gray-200 border-t"}> 
+      <div className={"fixed bottom-0 w-full p-3 bg-white border-t-gray-200 border-t"}> 
         <div className={"flex justify-around gap-3 items-center font-sans font-semibold"}>
-          <button className={`flex items-center flex-col transition-all hover:${!changePage ? "text-accent" : "text-ink-hover"} cursor-pointer ${!changePage ? "text-accent" : "text-gray-300"}`} onClick={() => {
+          <button className={`flex items-center flex-col transition-all ${!changePage ? "text-accent" : "text-gray-300 hover:text-ink-hover"}  cursor-pointer`} onClick={() => {
             setChangePage(false)
           }}>
             <FaDice fontSize={"#fff"}/>
             SORTEIO
           </button>
 
-          <button className={`flex items-center transition-all hover:${changePage ? "text-accent" : "text-ink-hover"} flex-col cursor-pointer ${changePage ? "text-accent" : "text-gray-300"}`} onClick={() => {
+          <button className={`flex items-center transition-all ${changePage ? "text-accent" : "text-gray-300 hover:text-ink-hover"} flex-col cursor-pointer `} onClick={() => {
             setChangePage(true)
           }}>
             <FaRegSave/>

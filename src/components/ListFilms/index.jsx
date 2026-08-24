@@ -5,7 +5,8 @@ import SalvFilmCard from "../SalvFimCard";
 
 export default function ListFilm({listForFilms}) {
     const [isActive, setActive] = useState(false)
-    const [buttons, setButton] = useState([{name: "TODOS",isActive: true, id: 0}, {name: "PARA ASSISTIR", isActive: false ,id: 1}, {name: "ASSISTIDOS", isActive: false,id: 2}]);
+    const [buttons] = useState([{name: "TODOS",isActive: true, id: 0}, {name: "PARA ASSISTIR", isActive: false ,id: 1}, {name: "ASSISTIDOS", isActive: false,id: 2}]);
+    console.log(listForFilms)
 
     return (
         <div>
@@ -40,8 +41,9 @@ export default function ListFilm({listForFilms}) {
                 listForFilms.length !== 0 ? (
                     <div className="border-gray-300 border-t pt-3 mt-5">
                         {
-                            listForFilms.map((film) => {
-                                return <SalvFilmCard key={film.id} props={film}/>
+                            listForFilms.map(({filmChoose, date, status}) => {
+                                console.log(filmChoose.id)
+                                return <SalvFilmCard key={filmChoose.id} props={filmChoose} date={date} status={status}/>
                             })
                         }
                     </div>

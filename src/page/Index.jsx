@@ -10,15 +10,12 @@ import ListFilm from '../components/ListFilms'
 export default function App() {
 
   const [runRollet, setRunRollet] = useState(false)
-  const [filmChoose, setFilmChoose] = useState([])
-  const [creditsForFilm, setCreditsForFilm] = useState([])
+  const [filmChoose, setFilmChoose] = useState(null)
   const [genres, setGenres] = useState([])
   const [chooseGenre, setChooseGenre] = useState("");
   const [actor, setActor] = useState("");
   const [actorInformation, setActorInformation] = useState([])
   const [loading, setLoading] = useState(true);
-  const [providers, setProviders] = useState([]);
-  const [trailer, setTrailer] = useState([]);
   const [loadingButton, setLoadingButton] = useState(false);
   const [changePage, setChangePage] = useState(false);
 
@@ -50,13 +47,9 @@ export default function App() {
           }
         });
 
-        let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`, {
-          params: {
-            language: "pt-BR"
-          }
-        });
+        let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`);
 
-        trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer");
+        trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer")[0];
 
         const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
           params: {
@@ -70,11 +63,14 @@ export default function App() {
           }
         });
 
+        const film = {
+          film: filmCorrect.data,
+          trailer: trailerForFilm,
+          providers: providersToFilm.data.results["BR"]["flatrate"],
+          credits: credits.data,
+        }
         
-        setTrailer(trailerForFilm)
-        setProviders(providersToFilm.data.results["BR"]["flatrate"]);
-        setFilmChoose(filmCorrect.data)
-        setCreditsForFilm(credits.data)
+        setFilmChoose(film)
         setRunRollet(true)
       } catch (err) {
         console.log(err)
@@ -144,12 +140,9 @@ export default function App() {
         {
           !changePage ? (
             <SortFilms
-              runRollet={runRollet}
               filmChoose={filmChoose}
+              runRollet={runRollet}
               searchFilm={searchFilm}
-              creditsForFilm={creditsForFilm}
-              providers={providers}
-              trailer={trailer}
               loadingButton={loadingButton}
               genres={genres}
               setChooseGenre={setChooseGenre}
@@ -161,10 +154,17 @@ export default function App() {
               saveButton={saveFilm}
               save={() => {
                 if(saveFilm === false){
-                  setListFilmsSave((prevent) => [...prevent, filmChoose])
+                  const year = new Date().getFullYear();
+                  const month = new Date().getMonth();
+                  const day = new Date().getDate();
+                  const date = `${day}/${month}/${year}`
+
+                  const film = {filmChoose, date, status: "todos"}
+
+                  setListFilmsSave((prevent) => [...prevent, film])
                   setSaveFilm(true)
                 } else {
-                  const removeFilm = listFilmsSave.filter((e) => e.id !== filmChoose.id)
+                  const removeFilm = listFilmsSave.filter((e) => e.film.id !== filmChoose.film.id)
                   setListFilmsSave(removeFilm)
                   setSaveFilm(false)
                 }

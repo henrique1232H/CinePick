@@ -6,6 +6,7 @@ export default function DialogModal({children, filmChoose}) {
 	const { film, credits, providers } = filmChoose;
 	const actors = credits.cast.slice(0, 3);
 	const director = credits.crew.find((person) => person.job === "Director");
+	const brazilProviders = providers?.BR?.flatrate ?? [];
 	const date = new Date(film.release_date).getFullYear();
 
     return (
@@ -89,27 +90,15 @@ export default function DialogModal({children, filmChoose}) {
 
 				  <div className={""}>
 					<h4 className="font-sans text-gray-600 text-[12px] my-5">ONDE ASSISTIR</h4>
-					{
-						console.log(providers["BR"])
-					}
-
-						{
-							providers["BR"] !== undefined ? (
-								<div className={"flex flex-wrap gap-2"}>
-
-									{
-										providers["BR"]["flatrate"].map((provider) => {
-											return <span key={provider.id} className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}> {(provider.provider_name)} </span>
-										})
-									}
-								</div>
-							) : (
-								<div className={"flex flex-wrap gap-2"}>
-									<p>Não tenhos provedor desse filme no brasil</p>
-								</div>
-							)
-						}					
-						<span className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}> Stremio </span>
+					{brazilProviders.length > 0 && (
+						<div className={"flex flex-wrap gap-2"}>
+							{brazilProviders.map((provider) => (
+								<span key={provider.provider_id} className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}>
+									{provider.provider_name}
+								</span>
+							))}
+						</div>
+					)}
 					</div>
 
 

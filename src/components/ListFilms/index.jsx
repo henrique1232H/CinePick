@@ -3,10 +3,11 @@ import { FaRegSave } from "react-icons/fa";
 import SalvFilmCard from "../SalvFimCard";
 
 
-export default function ListFilm({listForFilms}) {
+export default function ListFilm({listForFilms, setListForFilm}) {
     const [isActive, setActive] = useState(false)
     const [buttons] = useState([{name: "TODOS",isActive: true, id: 0}, {name: "PARA ASSISTIR", isActive: false ,id: 1}, {name: "ASSISTIDOS", isActive: false,id: 2}]);
-    console.log(listForFilms)
+    const filmStatusTodos = listForFilms.filter(({status}) => status === "todos");
+
 
     return (
         <div>
@@ -31,8 +32,9 @@ export default function ListFilm({listForFilms}) {
                                 })
                                 setActive(!isActive)
                             }
+
                             
-                        }}>{button.name} (0)</button>
+                        }}>{button.name} ()</button>
                     })
                 }
             </div>
@@ -42,8 +44,10 @@ export default function ListFilm({listForFilms}) {
                     <div className="border-gray-300 border-t pt-3 mt-5">
                         {
                             listForFilms.map(({filmChoose, date, status}) => {
-                                console.log(filmChoose.id)
-                                return <SalvFilmCard key={filmChoose.id} props={filmChoose} date={date} status={status}/>
+                                return <SalvFilmCard key={filmChoose.film.id} props={filmChoose} date={date} status={status} removeFilm={() => {
+                                    const remove = listForFilms.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id);
+                                    setListForFilm(remove)
+                                }}/>
                             })
                         }
                     </div>

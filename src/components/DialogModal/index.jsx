@@ -89,18 +89,29 @@ export default function DialogModal({children, filmChoose}) {
 
 				  <div className={""}>
 					<h4 className="font-sans text-gray-600 text-[12px] my-5">ONDE ASSISTIR</h4>
+					{
+						console.log(providers["BR"])
+					}
 
-					<div className={"flex flex-wrap gap-2"}> 
 						{
-							providers.map((provider) => {
-								return <span key={provider.id} className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}> {(provider.provider_name)} </span>
-							})
-						}
+							providers["BR"] !== undefined ? (
+								<div className={"flex flex-wrap gap-2"}>
+
+									{
+										providers["BR"]["flatrate"].map((provider) => {
+											return <span key={provider.id} className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}> {(provider.provider_name)} </span>
+										})
+									}
+								</div>
+							) : (
+								<div className={"flex flex-wrap gap-2"}>
+									<p>Não tenhos provedor desse filme no brasil</p>
+								</div>
+							)
+						}					
 						<span className={"text-[10px] border-gray-300 bg-white border font-semibold font-sans py-1 px-3"}> Stremio </span>
 					</div>
 
-
-				  </div>
 
 				  <div>
 					<button>

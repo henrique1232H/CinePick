@@ -21,7 +21,7 @@ export default function SelectInput({genres, setGenres}) {
             
             <Select.Viewport className="p-1.25">
              <Select.Group className={""}>
-                <Select.Item value={"0"} className={"my-1 p-1 font-sans text-[14px] outline-none hover:bg-accent hover:text-white"}>
+                <Select.Item value={""} className={"my-1 p-1 font-sans text-[14px] outline-none hover:bg-accent hover:text-white"}>
                   <Select.ItemText>
                     Todos os Gêneros
                    </Select.ItemText>

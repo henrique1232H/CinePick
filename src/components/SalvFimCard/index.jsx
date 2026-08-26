@@ -1,7 +1,8 @@
+import { FaRegTrashAlt } from "react-icons/fa";
 import DialogModal from "../DialogModal"
 
 
-export default function SalvFilmCard({props, date, status}) {
+export default function SalvFilmCard({props, date, status, removeFilm}) {
     const { film } = props;
 
     return (
@@ -12,15 +13,22 @@ export default function SalvFilmCard({props, date, status}) {
                 </DialogModal>
             </div>
 
-            <div className="h-full w-full">
-                <p className={"text-accent text-[11px] font-bold font-sans mb-2"}> SALVO EM {date}</p>
+            <div className="h-full w-full flex justify-between p-2">
+                <div>
+                    <p className={"text-accent text-[11px] font-bold font-sans mb-2"}> SALVO EM {date}</p>
 
 
-                <DialogModal filmChoose={props}>
-                    <h4 className={"cursor-pointer hover:text-accent transition-all text-ink"}>{film.title}</h4>
-                </DialogModal>
+                    <DialogModal filmChoose={props}>
+                        <h4 className={"cursor-pointer hover:text-accent transition-all text-ink"}>{film.title}</h4>
+                    </DialogModal>
+                </div>
 
+                <div>
+                    <button className="cursor-pointer rounded-lg text-gray-400 hover:bg-red-200/90 hover:text-red-700 transition-all p-1" onClick={removeFilm}>
+                        <FaRegTrashAlt className=""/>
+                    </button>
 
+                </div>
             </div>
 
         </div>

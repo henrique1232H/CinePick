@@ -28,15 +28,18 @@ export default function App() {
       let filmsToRandom = []
       let response;
 
+      const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.id === filmChoose.id);
+      if(checkIfFilmIsAlreadySave.length === 1) {
+        setSaveFilm(true)
+      }
 
       try {
-        for(let i = 1; i <= 5; i++) {
-          response = await checkFilters(chooseGenre, actor, i, actorInformation);
-          
+        for(let i = 1; i <= 3; i++) {
+          response = await checkFilters(chooseGenre, i, actorInformation);          
           response.results.forEach(filmInArray => {
             filmsToRandom = [...filmsToRandom, filmInArray];
           })
-          i++
+
         }
               
         const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
@@ -56,7 +59,6 @@ export default function App() {
             language: "pt-BR"
           }
         });
-
         const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
           params: {
             language: "pt-BR"
@@ -66,7 +68,7 @@ export default function App() {
         const film = {
           film: filmCorrect.data,
           trailer: trailerForFilm,
-          providers: providersToFilm.data.results["BR"]["flatrate"],
+          providers: providersToFilm.data.results,
           credits: credits.data,
         }
         
@@ -154,24 +156,26 @@ export default function App() {
               saveButton={saveFilm}
               save={() => {
                 if(saveFilm === false){
+
                   const year = new Date().getFullYear();
                   const month = new Date().getMonth();
                   const day = new Date().getDate();
                   const date = `${day}/${month}/${year}`
+
 
                   const film = {filmChoose, date, status: "todos"}
 
                   setListFilmsSave((prevent) => [...prevent, film])
                   setSaveFilm(true)
                 } else {
-                  const removeFilm = listFilmsSave.filter((e) => e.film.id !== filmChoose.film.id)
+                  const removeFilm = listFilmsSave.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id)
                   setListFilmsSave(removeFilm)
                   setSaveFilm(false)
                 }
               }}
     
             />
-          ): <ListFilm listForFilms={listFilmsSave}/>
+          ): <ListFilm listForFilms={listFilmsSave} setListForFilm={setListFilmsSave}/>
         }
       </main>
 

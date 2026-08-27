@@ -20,8 +20,8 @@ export default function DialogModal({children, filmChoose, save, saveButton}) {
                 {children}
             </AlertDialog.Trigger>
             <AlertDialog.Portal>
-			<AlertDialog.Overlay className="modal-overlay fixed inset-0 bg-black/70" />
-			<AlertDialog.Content className="modal-content fixed left-1/2 top-1/2 my-10 h-full w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-100 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover">
+			<AlertDialog.Overlay className="modal-overlay fixed z-50 inset-0 bg-black/70" />
+			<AlertDialog.Content className="modal-content fixed z-50 left-1/2 top-1/2 my-10 h-full w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-100 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover">
 				<AlertDialog.Title className="w-full h-auto flex-col justify-center items-center relative">
 
 					<div className="relative w-full flex justify-center items-center">

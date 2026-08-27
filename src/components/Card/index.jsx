@@ -19,7 +19,14 @@ export default function Card({isActive, filmChoose, start, loadingButton, save, 
                 <div class={"flex py-5 justify-center items-center flex-col"}>
 
                   <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
-                    <img className={"cursor-pointer shadow-lg shadow-gray-200"} src={`https://image.tmdb.org/t/p/w200${film.poster_path}`} alt={film.title}/>
+                    <div className="group relative">
+                      <img className={"cursor-pointer shadow-lg shadow-gray-200"} src={`https://image.tmdb.org/t/p/w200${film.poster_path}`} alt={film.title}/>
+                      <div className="absolute inset-0 flex items-center justify-center bg-ink/60 opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer">
+                        <span className="border border-gray-400 bg-ink px-3 py-1 font-sans text-white">
+                          VER FICHA
+                        </span>
+                      </div>
+                    </div>
                   </DialogModal>
 
                   <div class={"flex items-center justify-center gap-4 my-3"}>

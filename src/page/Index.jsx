@@ -141,6 +141,25 @@ export default function App() {
      searchActor()
   }, [actor])
 
+  const saveFilmInList = () => {
+    if(saveFilm === false){
+      const year = new Date().getFullYear();
+      const month = new Date().getMonth();
+      const day = new Date().getDate();
+      const date = `${day}/${month}/${year}`
+
+
+      const film = {filmChoose, date, status: "todos"}
+
+      setListFilmsSave((prevent) => [...prevent, film])
+      setSaveFilm(true)
+    } else {
+      const removeFilm = listFilmsSave.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id)
+      setListFilmsSave(removeFilm)
+      setSaveFilm(false)
+    }
+  }
+
 
   return (
     <>
@@ -163,28 +182,10 @@ export default function App() {
               actorInformation={actorInformation}
               loading={loading}
               saveButton={saveFilm}
-              save={() => {
-                if(saveFilm === false){
-
-                  const year = new Date().getFullYear();
-                  const month = new Date().getMonth();
-                  const day = new Date().getDate();
-                  const date = `${day}/${month}/${year}`
-
-
-                  const film = {filmChoose, date, status: "todos"}
-
-                  setListFilmsSave((prevent) => [...prevent, film])
-                  setSaveFilm(true)
-                } else {
-                  const removeFilm = listFilmsSave.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id)
-                  setListFilmsSave(removeFilm)
-                  setSaveFilm(false)
-                }
-              }}
+              save={saveFilmInList}
     
             />
-          ): <ListFilm listForFilms={listFilmsSave} setListForFilm={setListFilmsSave}/>
+          ): <ListFilm listForFilms={listFilmsSave} setListForFilm={setListFilmsSave} save={saveFilmInList} saveButton={saveFilm}/>
         }
       </main>
 

@@ -3,6 +3,7 @@ import DialogModal from "../DialogModal"
 
 
 export default function SalvFilmCard({props, date, status, removeFilm}) {
+    console.log(props)
     const { film } = props;
 
     return (

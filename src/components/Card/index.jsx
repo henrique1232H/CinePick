@@ -2,6 +2,7 @@ import { FaDice, FaPlay } from "react-icons/fa"
 import { IoStarSharp } from "react-icons/io5"
 import DialogModal from "../DialogModal"
 import ButtonRollet from "../ButtonRollet";
+import SalvFilmButton from "../SalvFilmButton";
 
 
 export default function Card({isActive, filmChoose, start, loadingButton, save, saveButton}) {
@@ -17,7 +18,7 @@ export default function Card({isActive, filmChoose, start, loadingButton, save, 
             {isActive ? (
                 <div class={"flex py-5 justify-center items-center flex-col"}>
 
-                  <DialogModal filmChoose={filmChoose}>
+                  <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
                     <img className={"cursor-pointer shadow-lg shadow-gray-200"} src={`https://image.tmdb.org/t/p/w200${film.poster_path}`} alt={film.title}/>
                   </DialogModal>
 
@@ -78,19 +79,8 @@ export default function Card({isActive, filmChoose, start, loadingButton, save, 
                       </button>
                     </a>
 
-
-                    <button onClick={save} className={`${!saveButton ? "bg-white hover:bg-gray-100" : "bg-accent text-white border-none"}  w-full cursor-pointer text-ink border border-gray-300 p-3 font-semibold transition-all hover:${!saveButton  ? "bg-gray-100" : "bg-accent"}`}>
-                      
-                      {
-                        !saveButton ?  "SALVAR" : "SALVO"
-                      }
-                    </button>
+                    <SalvFilmButton save={save} saveButton={saveButton}/>
                   </div>
-
-
-
-
-
                 </div>
             ): (
                 <div class={"mt-6 py-5 flex justify-center items-center flex-col gap-5"}>

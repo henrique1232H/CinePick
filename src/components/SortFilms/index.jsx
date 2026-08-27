@@ -21,7 +21,7 @@ export default function SortFilms({
     save,
     saveButton
 }) {
-    const checkActor = actorInformation.length === 0 ? [] : actorInformation[0]
+    const checkActor = actorInformation.length === 0 ? [] : actorInformation
 
     return (
         <>

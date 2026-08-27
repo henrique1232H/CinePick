@@ -28,37 +28,34 @@ export default function App() {
       let filmsToRandom = []
       let response;
 
-      console.log(actor)
-      console.log(actorInformation)
-
-      if(actorInformation.length === 0) {
+      if(actorInformation[0] === "Sem ator") {
         alert("Por favor digite um ator valido")
         setLoadingButton(false)
         return
       }
 
-      const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.id === filmChoose.film.id);
-      if(checkIfFilmIsAlreadySave.length === 1) {
-        setSaveFilm(true)
-      }
-
+      
       try {
         for(let i = 1; i <= 3; i++) {
-          response = await checkFilters(chooseGenre, i, actorInformation[0]);          
+          response = await checkFilters(chooseGenre, i, actorInformation);          
           response.results.forEach(filmInArray => {
             filmsToRandom = [...filmsToRandom, filmInArray];
           })
-
+          
         }
-              
+        
         const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
-
+        
         const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
           params: {
             language: "pt-BR"
           }
         });
 
+        const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.film.id === filmCorrect.data.id);
+
+        checkIfFilmIsAlreadySave.length === 1 && setSaveFilm(true)
+        
         let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`);
 
         trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer")[0];
@@ -127,10 +124,8 @@ export default function App() {
             language: "pt-BR"
           }
         });
-        
-        if(response.data.results.length !== 0) {
-          checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting");
-        }
+
+        response.data.results.length !== 0 ? checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting")[0] : ["Sem ator"]
                 
       } catch (err) {
         console.log(err)
@@ -145,6 +140,7 @@ export default function App() {
 
      searchActor()
   }, [actor])
+
 
   return (
     <>

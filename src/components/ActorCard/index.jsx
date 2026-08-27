@@ -4,8 +4,6 @@ import { MdDone } from "react-icons/md";
 
 export default function ActorCard({actorInformation, loading, actor}) {
 
-  console.log(actorInformation)
-
     const checkKnownFor = () => {
 
         if (loading === false) {
@@ -41,7 +39,7 @@ export default function ActorCard({actorInformation, loading, actor}) {
                       <Ring size="30" color="#2887FF"/>
                       <p className={"text-[10px]"}>Verificando dados de {actor} </p>
                     </span>
-                  ) : actorInformation.length === 0 ? (
+                  ) : actorInformation === undefined || actorInformation.length === 0 ? (
                     <div className={"flex items-center gap-2 text-white"}>
                       <img className={"h-11 w-9"} src={""} alt="" />
                       <p className={"text-[10px]"}> Não achamos esse ator/atriz...</p>

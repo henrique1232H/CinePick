@@ -28,6 +28,15 @@ export default function App() {
       let filmsToRandom = []
       let response;
 
+      console.log(actor)
+      console.log(actorInformation)
+
+      if(actorInformation.length === 0) {
+        alert("Por favor digite um ator valido")
+        setLoadingButton(false)
+        return
+      }
+
       const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.id === filmChoose.film.id);
       if(checkIfFilmIsAlreadySave.length === 1) {
         setSaveFilm(true)
@@ -35,7 +44,7 @@ export default function App() {
 
       try {
         for(let i = 1; i <= 3; i++) {
-          response = await checkFilters(chooseGenre, i, actorInformation);          
+          response = await checkFilters(chooseGenre, i, actorInformation[0]);          
           response.results.forEach(filmInArray => {
             filmsToRandom = [...filmsToRandom, filmInArray];
           })
@@ -110,7 +119,7 @@ export default function App() {
   useEffect(() => {
 
      const searchActor = async () => {
-     let checkOnlyActor;
+     let checkOnlyActor = [];
       try {
         setLoading(true)
         const response = await api.get(`/search/person?query=${actor}`, {
@@ -118,15 +127,19 @@ export default function App() {
             language: "pt-BR"
           }
         });
-
-        checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting");
         
+        if(response.data.results.length !== 0) {
+          checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting");
+        }
+                
       } catch (err) {
         console.log(err)
       } finally {
 
+
+
         setLoading(false)
-        setActorInformation(checkOnlyActor[0])
+        setActorInformation(checkOnlyActor)
       }
      }
 

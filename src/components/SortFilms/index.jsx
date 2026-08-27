@@ -21,6 +21,7 @@ export default function SortFilms({
     save,
     saveButton
 }) {
+    const checkActor = actorInformation.length === 0 ? [] : actorInformation[0]
 
     return (
         <>
@@ -55,7 +56,7 @@ export default function SortFilms({
                     <input type="text" className={"w-full p-3 bg-gray-100 border-gray-300 border outline-none focus:border-accent focus:bg-white"} value={actor} onChange={change} placeholder="Digite o nome (ex: DiCaprio, Bale, Zendaya)..."/>
                     {
                         actor.length > 1 && (
-                            <ActorCard actorInformation={actorInformation} loading={loading} actor={actor}/>
+                            <ActorCard actorInformation={checkActor} loading={loading} actor={actor}/>
                         )
                     }
                 </div>

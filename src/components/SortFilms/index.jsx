@@ -52,7 +52,7 @@ export default function SortFilms({
                             actor.length > 1 && <p className={"text-[10px] text-accent font-bold cursor-pointer hover:border-b"} onClick={clear}>LIMPAR </p>
                         }
                     </div>
-                    <input type="text" className={"w-full p-3 bg-gray-100 border-gray-300 border"} value={actor} onChange={change}/>
+                    <input type="text" className={"w-full p-3 bg-gray-100 border-gray-300 border outline-none focus:border-accent focus:bg-white"} value={actor} onChange={change} placeholder="Digite o nome (ex: DiCaprio, Bale, Zendaya)..."/>
                     {
                         actor.length > 1 && (
                             <ActorCard actorInformation={actorInformation} loading={loading} actor={actor}/>

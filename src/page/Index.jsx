@@ -28,7 +28,7 @@ export default function App() {
       let filmsToRandom = []
       let response;
 
-      const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.id === filmChoose.id);
+      const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.id === filmChoose.film.id);
       if(checkIfFilmIsAlreadySave.length === 1) {
         setSaveFilm(true)
       }

@@ -5,18 +5,24 @@ import { MdDone } from "react-icons/md";
 export default function ActorCard({actorInformation, loading, actor}) {
 
     const checkKnownFor = () => {
-        if (loading === false) {            
-            if (actorInformation.known_for.length === 0) {
+
+        if (loading === false) {
+          if(actorInformation === undefined) {
+            return "Verificando ator/atriz"
+          }
+            if (actorInformation?.known_for === undefined) {
                 return "Não tem um trabalho registrado"
             } else if (actorInformation.known_for[0].title === undefined) {
                 return actorInformation.known_for[0].name
             } else {
                 return `${actorInformation.known_for[0].title} (${actorInformation.known_for[0].original_title})`
             }
-        }
+
+          }
     }
 
     const check = checkKnownFor()
+    console.log(check)
 
 
     return (

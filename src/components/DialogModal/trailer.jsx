@@ -33,7 +33,7 @@ export default function Trailer({props, date}) {
     </AlertDialog.Title>
     <AlertDialog.Description class="mt-3.75 text-[15px] leading-normal text-mauve11">
 
-        <iframe className={"w-full h-60"} title={props.film.title} src={`https://www.youtube.com/watch?v=${props.trailer.key}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/>
+        <iframe className={"w-full h-60"} title={props.film.title} src={`https://www.youtube.com/embed/${props.trailer.key}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/>
 
     </AlertDialog.Description>
 

@@ -2,7 +2,8 @@ import { AlertDialog } from "radix-ui"
 import { GiFilmStrip } from "react-icons/gi"
 
 export default function Trailer({props, date}) {
-    console.log(props)
+    console.log(props.trailer)
+    console.log(`https://www.youtube.com/watch?v=${props.trailer.key}`)
     
     return (
         <AlertDialog.Content className="modal-content fixed z-50 left-1/2 top-1/2 my-10 h-3/4 w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-ink border-accent border-2 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover">
@@ -14,7 +15,7 @@ export default function Trailer({props, date}) {
 
                 <div>
                     <h3 className={"text-accent font-bold text-[12px]"}>TRAILER OFICIAL</h3>
-                    <h4 className={"text-white font-serif text-[11px]"}>{props.title} ({date})</h4>
+                    <h4 className={"text-white font-serif text-[11px]"}>{props.film.title} ({date})</h4>
                 </div>
             </div>
 
@@ -32,7 +33,7 @@ export default function Trailer({props, date}) {
     </AlertDialog.Title>
     <AlertDialog.Description class="mt-3.75 text-[15px] leading-normal text-mauve11">
 
-        <iframe className={"w-full h-60"} title={props.film.title} src={`https://www.youtube.com/watch?v=${props.trailer.key}`} />
+        <iframe className={"w-full h-60"} title={props.film.title} src={`https://www.youtube.com/watch?v=${props.trailer.key}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/>
 
     </AlertDialog.Description>
 

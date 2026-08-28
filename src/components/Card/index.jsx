@@ -79,12 +79,12 @@ export default function Card({isActive, filmChoose, start, loadingButton, save, 
 
                   <div className={"flex items-center gap-2 mt-1 w-full"}>
 
-                    <a href={`https://www.youtube.com/watch?v=${trailer.key}`} className={"w-full"}>
+                    <DialogModal isCard={false} filmChoose={filmChoose}>
                       <button class={"bg-ink w-full flex items-center justify-center gap-1.5 px-6 py-3 text-white cursor-pointer font-bold font-sans transition-all hover:bg-ink-hover"}>
                         <FaPlay />
                         TRAILER
                       </button>
-                    </a>
+                    </DialogModal>
 
                     <SalvFilmButton save={save} saveButton={saveButton}/>
                   </div>

@@ -6,7 +6,7 @@ export default function Trailer({props, date}) {
     console.log(`https://www.youtube.com/watch?v=${props.trailer.key}`)
     
     return (
-        <AlertDialog.Content className="modal-content fixed z-50 left-1/2 top-1/2 my-10 h-3/4 w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-ink border-accent border-2 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover">
+        <AlertDialog.Content className="modal-content fixed z-50 left-1/2 top-1/2 my-10 h-90 w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-ink border-accent border-2 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover">
         <AlertDialog.Title className="w-full h-auto flex-col justify-center items-center relative">
 
         <div className="relative w-full flex justify-between items-center">

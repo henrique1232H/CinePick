@@ -35,7 +35,7 @@ export default function ListFilm({listForFilms, setListForFilm, save, saveButton
                             }
 
                             
-                        }}>{button.name} ( {listForFilms.length} ) </button>
+                        }}>{button.name} ( {button.id !== 2 ? listForFilms.length : 0} ) </button>
                     })
                 }
             </div>
@@ -49,9 +49,13 @@ export default function ListFilm({listForFilms, setListForFilm, save, saveButton
                                     const remove = listForFilms.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id);
                                     setListForFilm(remove)
                                 }} addNote={() => {
-                                        const filterFilm = listForFilms.filter((filmToEdit) => filmToEdit.filmChoose.film.id !== filmChoose.film.id);
-                                        filterFilm.push({filmChoose, date, status, note: noteFilm})
-                                        setListForFilm(filterFilm)
+                                        setListForFilm((currentFilms) => currentFilms.map((filmToEdit) => {
+                                            if (filmToEdit.filmChoose.film.id !== filmChoose.film.id) {
+                                                return filmToEdit;
+                                            }
+
+                                            return {...filmToEdit, note: noteFilm};
+                                        }))
                                         
                                         setNoteFilm("");
                                 }}> 

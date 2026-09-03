@@ -1,4 +1,4 @@
-import { FaRegTrashAlt, FaStar } from "react-icons/fa";
+import { FaPlay, FaRegTrashAlt, FaStar } from "react-icons/fa";
 import DialogModal from "../DialogModal"
 import { MdMessage } from "react-icons/md";
 import { useState } from "react";
@@ -17,8 +17,8 @@ export default function SalvFilmCard({props, date, status, removeFilm, addNote, 
                 </DialogModal>
             </div>
 
-            <div className="h-full w-full flex justify-between p-2">
-                <div>
+            <div className="h-full w-full flex p-2">
+                <div className="flex flex-col gap-2 w-full">
                     <p className={"text-accent text-[11px] font-bold font-sans mb-2"}> SALVO EM {date}</p>
 
 
@@ -34,7 +34,7 @@ export default function SalvFilmCard({props, date, status, removeFilm, addNote, 
                         {
                             !isActive ? (
                                 <button className={"flex items-center gap-1 text-gray-600 font-sans text-[13px] cursor-pointer hover:text-ink"} onClick={() => setIsActive(!isActive)}>
-                                    <MdMessage className={"text-accent"}/> {noteCard === "" ? "+ Adicionar nota pessoal" : `Nota:"${noteCard}" `} 
+                                    <MdMessage className={"text-accent"}/> {noteCard === "" ? "+ Adicionar nota pessoal" : `Nota:"${noteCard}"`} 
                                 </button>
                             ) : (
                                 <div className={"bg-gray-100 border border-gray-200 p-1.5"}>
@@ -47,11 +47,19 @@ export default function SalvFilmCard({props, date, status, removeFilm, addNote, 
                                 </div>
                             )
                         }
+                    </div>
 
+                    <div className={"flex gap-2 mt-1 font-semibold  text-[12px] justify-center border-t-gray-300 border-t w-full"}>
+                    <DialogModal isCard={false} filmChoose={props}>
+                      <button class={"bg-red-600 w-full flex items-center justify-center gap-1.5 px-6 py-3 text-white cursor-pointer font-bold font-sans transition-all hover:bg-ink-hover"}>
+                        <FaPlay />
+                        TRAILER
+                      </button>
+                    </DialogModal>
                     </div>
                 </div>
 
-                <div>
+                <div className={""}>
                     <button className="cursor-pointer rounded-lg text-gray-400 hover:bg-red-200/90 hover:text-red-700 transition-all p-1" onClick={removeFilm}>
                         <FaRegTrashAlt/>
                     </button>

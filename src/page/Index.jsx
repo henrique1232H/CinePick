@@ -149,7 +149,7 @@ export default function App() {
       const date = `${day}/${month}/${year}`
 
 
-    const film = {filmChoose, date, status: "todos", note: ""}
+    const film = {filmChoose, date, status: false, note: ""}
 
       setListFilmsSave((prevent) => [...prevent, film])
       setSaveFilm(true)

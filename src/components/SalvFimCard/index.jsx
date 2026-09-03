@@ -1,16 +1,16 @@
-import { FaPlay, FaRegTrashAlt, FaStar } from "react-icons/fa";
+import { FaEye, FaPlay, FaRegTrashAlt, FaStar } from "react-icons/fa";
 import DialogModal from "../DialogModal"
 import { MdMessage } from "react-icons/md";
 import { useState } from "react";
 
 
-export default function SalvFilmCard({props, date, status, removeFilm, addNote, noteCard, children}) {
+export default function SalvFilmCard({props, date, status, removeFilm, addNote, noteCard, children, markDone}) {
     const [isActive, setIsActive] = useState(false)
     const { film } = props;
     const dateFilm = new Date(film.release_date).getFullYear()
 
     return (
-        <div className="flex items-center bg-white p-2 mt-4 border border-gray-300 gap-3 hover:border-ink-hover transition-all w-full h-auto font-sans">
+        <div className={`flex items-center bg-white p-2 mt-4 border border-gray-300 gap-3 ${!status ? "hover:border-ink-hover" : "border-none"} transition-all w-full h-auto font-sans`}>
             <div>
                 <DialogModal filmChoose={props}>
                     <img src={`https://image.tmdb.org/t/p/w200${film.poster_path}`} alt={film.title} className={"h-40 w-35 border border-gray-300 cursor-pointer"}/>
@@ -51,11 +51,24 @@ export default function SalvFilmCard({props, date, status, removeFilm, addNote, 
 
                     <div className={"flex gap-2 mt-1 font-semibold  text-[12px] justify-center border-t-gray-300 border-t w-full"}>
                     <DialogModal isCard={false} filmChoose={props}>
-                      <button class={"bg-red-600 w-full flex items-center justify-center gap-1.5 px-6 py-3 text-white cursor-pointer font-bold font-sans transition-all hover:bg-ink-hover"}>
+                      <button class={"bg-red-600 flex items-center justify-center w-5/12 gap-1.5 px-6 py-3 text-white cursor-pointer font-bold font-sans transition-all hover:bg-ink-hover"}>
                         <FaPlay />
                         TRAILER
                       </button>
                     </DialogModal>
+
+                <button className={`w-full ${!status ? "bg-ink hover:bg-ink-hover" : "bg-accent hover:bg-accent/80"} text-white cursor-pointer transition-all`} onClick={markDone}>
+                        {
+                            !status ? (
+                                <span className="flex items-center justify-center gap-1.5">
+                                    <FaEye />
+                                    MARCAR ASSISTIDO
+                                </span>
+                            ) : (
+                                <span className="">ASSISTIDO</span>
+                            )
+                        }
+                    </button>
                     </div>
                 </div>
 

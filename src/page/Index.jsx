@@ -153,13 +153,13 @@ export default function App() {
 
       setListFilmsSave((prevent) => [...prevent, film])
       setSaveFilm(true)
+      
     } else {
       const removeFilm = listFilmsSave.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id)
       setListFilmsSave(removeFilm)
       setSaveFilm(false)
     }
   }
-
 
   return (
     <>
@@ -189,7 +189,7 @@ export default function App() {
         }
       </main>
 
-      <div className={"fixed bottom-0 w-full p-3 bg-white border-t-gray-200 border-t"}> 
+      <div className={"fixed bottom-0 w-full z-50 p-3 bg-white border-t-gray-200 border-t"}> 
         <div className={"flex justify-around gap-3 items-center font-sans font-semibold"}>
           <button className={`flex items-center flex-col transition-all ${!changePage ? "text-accent" : "text-gray-300 hover:text-ink-hover"}  cursor-pointer`} onClick={() => {
             setChangePage(false)

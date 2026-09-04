@@ -126,15 +126,30 @@ export default function App() {
         });
 
         response.data.results.length !== 0 ? checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting")[0] : ["Sem ator"]
-                
+        
       } catch (err) {
         console.log(err)
       } finally {
+        const informationActor = await api.get(`/person/${checkOnlyActor.id}`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
 
-
+        const responseActor = {
+          id: informationActor.data.id,
+          original_name: checkOnlyActor.original_name,
+          name: informationActor.data.name,
+          profile_path: checkOnlyActor.profile_path,
+          known_for: checkOnlyActor.known_for,
+          biography: informationActor.data.biography,
+          birthday: informationActor.data.birthday,
+          also_known_as: informationActor.data.also_known_as,
+          place_of_birth: informationActor.data.place_of_birth,
+        }
 
         setLoading(false)
-        setActorInformation(checkOnlyActor)
+        setActorInformation(responseActor)
       }
      }
 
@@ -185,7 +200,11 @@ export default function App() {
               save={saveFilmInList}
     
             />
-          ): <ListFilm listForFilms={listFilmsSave} setListForFilm={setListFilmsSave} save={saveFilmInList} saveButton={saveFilm}/>
+          ): <ListFilm 
+                listForFilms={listFilmsSave} 
+                setListForFilm={setListFilmsSave} 
+                save={saveFilmInList} 
+                saveButton={saveFilm}/>
         }
       </main>
 

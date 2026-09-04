@@ -71,7 +71,7 @@ export default function SalvFilmCard({ props, date, status, removeFilm, addNote,
 
           <div className={"flex gap-2 mt-2 mb- font-semibold p-2 text-[12px] justify-center border-t-gray-300 border-t w-full"}>
             <DialogModal isCard={false} filmChoose={props}>
-              <button className={"bg-red-600 flex items-center justify-center w-5/12 gap-1.5 px-6 py-3 z-10 text-white cursor-pointer font-bold font-sans transition-all hover:bg-red-600/70"}>
+              <button className={"bg-red-600 flex items-center justify-center gap-1.5 px-6 py-3 z-10 text-white cursor-pointer font-bold font-sans transition-all hover:bg-red-600/70"}>
                 <FaPlay />
                 TRAILER
               </button>

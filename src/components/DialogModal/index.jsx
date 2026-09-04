@@ -12,13 +12,11 @@ export default function DialogModal({children, filmChoose, save, saveButton, isC
 	let film
 	let credits;
 	let providers;
-
-
-	if(!actorInformation) {
+	
+	if(actorInformation === true) {
 		film = filmChoose.film;
 		credits = filmChoose.credits;
 		providers = filmChoose.providers;
-
 
 		setActor(credits.cast.slice(0, 3));
 		setDirector(credits.crew.find((person) => person.job === "Director"));

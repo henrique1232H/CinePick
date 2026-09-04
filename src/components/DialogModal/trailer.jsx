@@ -74,7 +74,6 @@ export default function Trailer({ props, date, actorInformation = false }) {
 
         <AlertDialog.Description className="mt-3.75 text-[15px] leading-normal text-mauve11">
 
-          <img src="" alt="" />
 
         </AlertDialog.Description>
         

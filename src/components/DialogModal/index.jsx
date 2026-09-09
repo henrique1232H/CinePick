@@ -1,6 +1,6 @@
 import { AlertDialog } from "radix-ui";
 import FilmDetails from "./filmDetails";
-import Trailer from "./trailer";
+import TrailerOrActor from "./trailerOrActor";
 
 export default function DialogModal({
 	children,
@@ -40,7 +40,7 @@ export default function DialogModal({
 					brazilProviders={brazilProviders}
 				/>
 			) : (
-				<Trailer
+				<TrailerOrActor
 					props={filmChoose}
 					date={date}
 					actorInformation={actorInformation}

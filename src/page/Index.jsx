@@ -180,7 +180,7 @@ export default function App() {
     <>
       <Header />
 
-      <main className={"px-2 mx-4 my-20"}>
+      <main className={"px-5 mx-4 my-20"}>
 
         {
           !changePage ? (

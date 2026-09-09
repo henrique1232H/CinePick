@@ -48,17 +48,21 @@ export default function ActorCard({actorInformation, loading, actor}) {
                     </div>
                   ) : (
                     <div className={"flex items-center gap-2 hover:bg-ink-hover transition-all cursor-pointer"}>
-                      <img className={"h-full w-10"} src={`https://image.tmdb.org/t/p/w200${actorInformation.profile_path}`} alt={`Foto do ${actorInformation.original_name}`} />
 
                       <DialogModal isCard={false} actorInformation={actorInformation}>
-                        <span>
-                          <h4 className={"text-white italic font-medium font-serif"}> {actorInformation.original_name} <span className={" ml-2 bg-accent/30 text-[10px] text-accent font-semibold font-sans px-1 border border-accent/50"}> VER BIO </span> </h4>
-                          <p className={"flex items-center text-[9px] gap-2 text-white/80"}>
-                            <IoStarSharp fontSize={13} className={""}/>
-                            Destaque:
-                            <span className={"text-accent"}>{check}</span>
-                          </p>
-                        </span>
+                        <div className="flex gap-2 items-center">
+                          <img className={"h-full w-10"} src={`https://image.tmdb.org/t/p/w200${actorInformation.profile_path}`} alt={`Foto do ${actorInformation.original_name}`} />
+
+                          <span>
+                            <h4 className={"text-white italic font-medium font-serif"}> {actorInformation.original_name} <span className={" ml-2 bg-accent/30 text-[10px] text-accent font-semibold font-sans px-1 border border-accent/50"}> VER BIO </span> </h4>
+                            <p className={"flex items-center text-[9px] gap-2 text-white/80"}>
+                              <IoStarSharp fontSize={13} className={""}/>
+                              Destaque:
+                              <span className={"text-accent"}>{check}</span>
+                            </p>
+                          </span>
+                          
+                        </div>
                       </DialogModal>
 
                     </div>

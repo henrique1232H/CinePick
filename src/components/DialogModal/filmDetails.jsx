@@ -15,8 +15,6 @@ export default function FilmDetails({
   brazilProviders,
 }) {
 
-  console.log(actors)
-
   return (
     <AlertDialog.Content className="modal-content fixed z-50 left-1/2 top-1/2 my-10 h-full w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-md bg-gray-100 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover">
       <AlertDialog.Title asChild>

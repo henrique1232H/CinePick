@@ -40,10 +40,12 @@
 }
 
 :root {
-    font-family: "Cormorant", serif;
     background: var(--color-canvas)
-    
 };
+
+h1, h2 {
+   font-family: "Cormorant", serif;
+}
 
 @keyframes modal-overlay-in {
    from { opacity: 0; }

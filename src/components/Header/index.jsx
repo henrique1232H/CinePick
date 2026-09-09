@@ -2,7 +2,7 @@ import { GiFilmStrip } from "react-icons/gi";
 
 export default function Header() {
   return (
-    <header className={"bg-surface fixed top-0 z-10 w-full mb-5"}>
+    <header className={"bg-surface fixed top-0 z-50 w-full mb-5"}>
       <nav>
         <ul>
           <li>

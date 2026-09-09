@@ -41,7 +41,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                 </div>
               </DialogModal>
 
-              <div className={"flex  items-center justify-center z-30 gap-4 my-3"}>
+              <div className={"flex flex-wrap items-center justify-center z-30 gap-4 my-3"}>
                 <span className={"bg-ink text-white text-[9px] font-bold px-3 py-1"}>{date}</span>
                 <span className={"flex items-center justify-center gap-1 text-accent bg-gray-100/70 border-neutral-300 border px-2 text-[12px] font-bold"}>
                   <IoStarSharp /> {film.vote_average.toFixed(1) } / 10

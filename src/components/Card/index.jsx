@@ -3,13 +3,37 @@ import { IoStarSharp } from "react-icons/io5";
 import DialogModal from "../DialogModal";
 import ButtonRollet from "../ButtonRollet";
 import SalvFilmButton from "../SalvFilmButton";
+import { useEffect, useRef } from "react";
+import { getPaletteSync } from "colorthief";
 
 export default function Card({ isActive, filmChoose, start, loadingButton, save, saveButton }) {
   const film = filmChoose?.film;
   const credits = filmChoose?.credits;
-  const actorInFilm = credits?.cast?.slice(0, 3);
+  const actorInFilm = credits?.cast
   const director = credits?.crew?.filter((person) => person.job === "Director");
   const date = film ? new Date(film.release_date).getFullYear() : null;
+  const imageRef = useRef(null);
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    const image = imageRef.current;
+    if (!image) return;
+
+    const getColors = () => {
+      const palette = getPaletteSync(image, 6);
+      const hexColors = palette.map((color) => color.hex());
+
+      console.log(hexColors);
+    };
+
+    if (image.complete && image.naturalWidth > 0) {
+      getColors();
+    } else {
+      image.addEventListener("load", getColors);
+      return () => image.removeEventListener("load", getColors);
+    }
+  }, [isActive, filmChoose?.film?.poster_path]);
 
   return (
     <div className={"bg-surface flex-wrap rounded-lg border-neutral-300 border font-sans mt-4"}>
@@ -33,6 +57,8 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                   <img
                     className="w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
                     src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
+                    crossOrigin="anonymous"
+                    ref={imageRef}
                     alt={film.title}
                   />
                   <div className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-ink/90 opacity-0 transition-opacity group-hover:opacity-100">
@@ -103,16 +129,14 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
 
           <span className={"h-2 block w-full border-neutral-300 border-b my-3"} />
 
-          <div className={"flex text-[12px] flex-wrap gap-1"}>
+          <div className={"flex min-w-0 items-center gap-1 text-[12px]"}>
             <h4>ELENCO:</h4>
-
-            {actorInFilm.map((actor) => {
-              return (
-                <p key={actor.id} className={"text-gray-400"}>
-                  {actor.name},
-                </p>
-              );
-            })}
+            <p
+              className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-gray-400"
+              title={actorInFilm.map((actor) => actor.name).join(", ")}
+            >
+              {actorInFilm.map((actor) => actor.name).join(", ")}
+            </p>
           </div>
 
           <div className="mt-4 mb-1 w-full font-semibold">

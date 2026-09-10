@@ -11,35 +11,48 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
   const director = credits?.crew?.filter((person) => person.job === "Director");
   const date = film ? new Date(film.release_date).getFullYear() : null;
 
+  console.log(film)
+
   return (
     <div className={"bg-surface flex-wrap rounded-lg border-neutral-300 border-b font-sans"}>
       {isActive ? (
         <div className={"relative mt-4"}>
 
           <div className="absolute top-0 w-full border-b border-gray-800">
-            <img src={`https://image.tmdb.org/t/p/w200${film.backdrop_path}`} alt="" className="top-0 w-full left-0"/>
+            <img src={`https://image.tmdb.org/t/p/w200${film.backdrop_path}`} alt="" className="top-0 w-full h-50 left-0 object-cover"/>
 
-            <div className="bg-linear-to-b from-black to-ink/40 absolute z-0 w-full left-0 top-0 h-full"> 
+            <div className="bg-linear-to-b from-black to-ink/20 absolute z-0 w-full left-0 top-0 h-full"> 
       
             </div>
           </div>
 
-          <div className="pt-40 px-5">
+          <div className="pt-29 px-5">
             <div className="flex items-center z-30 gap-2.5 ">
               <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
                 <div className="group relative w-36 shrink-0 overflow-hidden shadow-lg">
                   <img
-                    className="h-full w-full cursor-pointer object-cover"
+                    className="h- w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
                     src={`https://image.tmdb.org/t/p/w200${film.poster_path}`}
                     alt={film.title}
                   />
-                  <div className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-ink/60 opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-ink/90 opacity-0 transition-opacity group-hover:opacity-100">
                     <span className="border border-gray-400 bg-ink px-3 py-1 font-sans text-white">
                       VER FICHA
                     </span>
                   </div>
                 </div>
               </DialogModal>
+
+              <div className="pt-5 z-20">
+                  <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
+                    <h2 className={"font-medium text-2xl text-ink hover:text-accent cursor-pointer transition-all mt-4"}> {film.title} </h2>
+                  </DialogModal>
+
+                  <p className="text-[10px] italic">"{film.tagline}"</p>
+
+                  <h3 className={"text-[12px] mt-2 text-gray-500 font-serif "}> DIREÇÃO: <span className="text-ink">{director[0]?.name?.toUpperCase()}</span></h3>
+              </div>
+            </div>
 
               <div className={"flex flex-wrap items-center justify-center z-30 gap-4 my-3"}>
                 <span className={"bg-ink text-white text-[9px] font-bold px-3 py-1"}>{date}</span>
@@ -48,14 +61,8 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                 </span>
                 <span className={"border-neutral-300 border text-gray-500 px-2 text-[12px]"}>{film.runtime} min</span>
               </div>
-            </div>
 
 
-            <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
-              <h2 className={"font-medium text-2xl text-ink hover:text-accent cursor-pointer transition-all mt-4"}> {film.title} </h2>
-            </DialogModal>
-
-            <h3 className={"text-gray-300 font-serif "}> {director[0]?.name?.toUpperCase()} - {date} </h3>
 
             <div className={"my-4 flex gap-1 flex-wrap"}>
               {film.genres.map((genre) => {

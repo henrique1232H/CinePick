@@ -14,11 +14,11 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
   console.log(film)
 
   return (
-    <div className={"bg-surface flex-wrap rounded-lg border-neutral-300 border-b font-sans"}>
+    <div className={"bg-surface flex-wrap rounded-lg border-neutral-300 border font-sans mt-4"}>
       {isActive ? (
-        <div className={"relative mt-4"}>
+        <div className={"relative"}>
 
-          <div className="absolute top-0 w-full border-b border-gray-800">
+          <div className="absolute top-0 w-full border-b-2 border-INK">
             <img src={`https://image.tmdb.org/t/p/w200${film.backdrop_path}`} alt="" className="top-0 w-full h-50 left-0 object-cover"/>
 
             <div className="bg-linear-to-b from-black to-ink/20 absolute z-0 w-full left-0 top-0 h-full"> 
@@ -31,7 +31,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
               <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
                 <div className="group relative w-36 shrink-0 overflow-hidden shadow-lg">
                   <img
-                    className="h- w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
+                    className="w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
                     src={`https://image.tmdb.org/t/p/w200${film.poster_path}`}
                     alt={film.title}
                   />
@@ -50,24 +50,35 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
 
                   <p className="text-[10px] italic">"{film.tagline}"</p>
 
-                  <h3 className={"text-[12px] mt-2 text-gray-500 font-serif "}> DIREÇÃO: <span className="text-ink">{director[0]?.name?.toUpperCase()}</span></h3>
+                  <h3 className={"text-[12px] mt-2 text-gray-500"}> DIREÇÃO: <span className="text-ink font-bold">{director[0]?.name?.toUpperCase()}</span></h3>
               </div>
             </div>
 
-              <div className={"flex flex-wrap items-center justify-center z-30 gap-4 my-3"}>
-                <span className={"bg-ink text-white text-[9px] font-bold px-3 py-1"}>{date}</span>
-                <span className={"flex items-center justify-center gap-1 text-accent bg-gray-100/70 border-neutral-300 border px-2 text-[12px] font-bold"}>
-                  <IoStarSharp /> {film.vote_average.toFixed(1) } / 10
+            <div className="mt-5 flex bg-gray-100 border border-gray-300 items-center justify-between w-auto">
+              <div className={"flex flex-col items-center gap-1 text-gray-400 bg-gray-100/70 border-neutral-300 border-r text-[12px] font-bold py-2 px-5 hover:bg-gray-200 transition-all"}>
+                NOTA
+                <span className="flex items-center gap-2">
+                  <IoStarSharp className="text-yellow-300"/> <span className="font-bold text-ink">{film.vote_average.toFixed(1) }</span>  / 10
                 </span>
-                <span className={"border-neutral-300 border text-gray-500 px-2 text-[12px]"}>{film.runtime} min</span>
+
               </div>
 
+              <span className={"text-[9px] font-bold py-2 px-5 text-gray-400 flex flex-col items-center hover:bg-gray-200 transition-all"}>
+                LANÇAMENTO
+                <span className={"mt-2 text-ink text-[11px]"}>{date}</span>
+              </span>
 
+              <span className={"border-l border-gray-300 text-gray-400 text-[9px] flex flex-col py-2 px-5 hover:bg-gray-200 transition-all"}>
+                DURAÇÃO
+                <span className="mt-2 text-[11px] text-ink font-bold">{film.runtime} min</span>
+              </span>
+
+            </div>
 
             <div className={"my-4 flex gap-1 flex-wrap"}>
               {film.genres.map((genre) => {
                 return (
-                  <span key={genre.id} className={"text-[9px] font-bold text-ink border-gray-300 border bg-gray-100 mr-1 py-1 px-2"}>
+                  <span key={genre.id} className={"text-[9px] font-bold text-ink border-gray-300 border bg-gray-100/40 mr-1 py-1 px-2"}>
                     {genre.name.toUpperCase()}
                   </span>
                 );
@@ -88,8 +99,8 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
 
           <span className={"h-2 block w-full border-neutral-300 border-b my-3"} />
 
-          <div className={"flex text-[12px] justify-center flex-wrap gap-1 items-center"}>
-            <h4>Elenco:</h4>
+          <div className={"flex text-[12px] flex-wrap gap-1"}>
+            <h4>ELENCO:</h4>
 
             {actorInFilm.map((actor) => {
               return (

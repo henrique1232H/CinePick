@@ -15,7 +15,7 @@ export default function SalvFilmCard({ props, date, status, removeFilm, addNote,
       <div>
         <DialogModal filmChoose={props}>
           <img
-            src={`https://image.tmdb.org/t/p/w200${film.poster_path}`}
+            src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
             alt={film.title}
             className={"h-40 w-35 border border-gray-300 cursor-pointer"}
           />

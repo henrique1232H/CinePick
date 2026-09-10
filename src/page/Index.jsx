@@ -44,6 +44,11 @@ export default function App() {
           
         }
         
+        if(filmsToRandom.length === 0) {
+          alert("Não existe filme assim")
+          return
+        }
+
         const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
         
         const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
@@ -51,6 +56,7 @@ export default function App() {
             language: "pt-BR"
           }
         });
+
 
         const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.film.id === filmCorrect.data.id);
 
@@ -77,6 +83,7 @@ export default function App() {
           providers: providersToFilm.data.results,
           credits: credits.data,
         }
+
         
         setFilmChoose(film)
         setRunRollet(true)

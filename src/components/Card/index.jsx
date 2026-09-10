@@ -11,18 +11,18 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
   const director = credits?.crew?.filter((person) => person.job === "Director");
   const date = film ? new Date(film.release_date).getFullYear() : null;
 
-  console.log(film)
-
   return (
     <div className={"bg-surface flex-wrap rounded-lg border-neutral-300 border font-sans mt-4"}>
       {isActive ? (
         <div className={"relative"}>
 
-          <div className="absolute top-0 w-full border-b-2 border-INK">
-            <img src={`https://image.tmdb.org/t/p/w200${film.backdrop_path}`} alt="" className="top-0 w-full h-50 left-0 object-cover"/>
+          <div className="absolute top-0 w-full border-b border-gray-500">
+            <img src={`https://image.tmdb.org/t/p/w500${film.backdrop_path}`} alt="" className="top-0 w-full h-45 left-0 object-cover"/>
 
-            <div className="bg-linear-to-b from-black to-ink/20 absolute z-0 w-full left-0 top-0 h-full"> 
-      
+            <div className="bg-linear-to-b from-black to-white/50 absolute z-0 w-full left-0 top-0 h-full"> 
+                <span className="text-white flex my-3 mx-5 bg-ink w-35 text-[10px] items-center justify-center p-0.5 font-semibold border border-gray-600">
+                    SELEÇÃO DO DIA
+                </span>
             </div>
           </div>
 
@@ -32,7 +32,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                 <div className="group relative w-36 shrink-0 overflow-hidden shadow-lg">
                   <img
                     className="w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
-                    src={`https://image.tmdb.org/t/p/w200${film.poster_path}`}
+                    src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
                     alt={film.title}
                   />
                   <div className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-ink/90 opacity-0 transition-opacity group-hover:opacity-100">
@@ -43,14 +43,18 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                 </div>
               </DialogModal>
 
-              <div className="pt-5 z-20">
+              <div className="pt-5 z-20 min-w-0">
                   <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
                     <h2 className={"font-medium text-2xl text-ink hover:text-accent cursor-pointer transition-all mt-4"}> {film.title} </h2>
                   </DialogModal>
 
-                  <p className="text-[10px] italic">"{film.tagline}"</p>
-
-                  <h3 className={"text-[12px] mt-2 text-gray-500"}> DIREÇÃO: <span className="text-ink font-bold">{director[0]?.name?.toUpperCase()}</span></h3>
+                  {film.tagline !== "" && (
+                    <p className="block max-w-full truncate text-[10px] italic">
+                      "{film.tagline}"
+                    </p>
+                  )}
+                  
+                  <h3 className={"text-[12px] mt-2 text-gray-500 truncate"}> DIREÇÃO: <span className="text-ink font-bold">{director[0]?.name?.toUpperCase()}</span></h3>
               </div>
             </div>
 
@@ -78,7 +82,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
             <div className={"my-4 flex gap-1 flex-wrap"}>
               {film.genres.map((genre) => {
                 return (
-                  <span key={genre.id} className={"text-[9px] font-bold text-ink border-gray-300 border bg-gray-100/40 mr-1 py-1 px-2"}>
+                  <span key={genre.id} className={"text-[9px] font-bold text-ink border-gray-300 border bg-gray-100/40 mr-1 py-1 px-2 cursor-pointer"}>
                     {genre.name.toUpperCase()}
                   </span>
                 );
@@ -92,8 +96,8 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
               <p className={"text-gray-600"}>Esse filme não possui nenhuma sinopse</p>
             </div>
           ) : (
-            <div className={"my-2 text-sm h-18 overflow-y-scroll"}>
-              <p className={"text-gray-600"}>{film.overview}</p>
+            <div className={"my-2 text-sm min-w-0"}>
+              <p className={"text-gray-600 line-clamp-3"}>{film.overview}</p>
             </div>
           )}
 
@@ -132,7 +136,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
           </div>
         </div>
       ) : (
-        <div className={"mt-6 py-5 flex justify-center items-center flex-col gap-5"}>
+        <div className={"mt-6 py-5 flex flex-wrap justify-center items-center flex-col gap-5 px-3"}>
           <span className={"bg-ink flex justify-center flex-wrap items-center h-15 w-15 border-accent border-2"}>
             <FaDice fontSize={35} className={"text-accent"} />
           </span>

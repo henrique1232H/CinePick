@@ -5,10 +5,9 @@ import DialogModal from ".";
 
 export default function TrailerOrActor({ props, date, actorInformation = false }) {
 
-  console.log(actorInformation)
 
   return (
-    <AlertDialog.Content className="modal-content fixed z-50 left-1/2 top-1/2 my-10 h-90 w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-ink border-accent border-2 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover">
+    <AlertDialog.Content className={`modal-content fixed z-50 left-1/2 top-1/2 my-10 ${!actorInformation ? "h-90" : "h-130"} w-full max-w-120 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-ink border-accent border-2 overflow-y-auto scrollbar-thumb-accent scrollbar-track-ink-hover`}>
 
       {!actorInformation ? (
         <div>
@@ -108,9 +107,6 @@ export default function TrailerOrActor({ props, date, actorInformation = false }
 
                   <p className="text-gray-200 text-sm font-sans mt-1"> {actorInformation.known_for[0].overview} </p>
                 </div>
-
-
-
 
               </div>
 

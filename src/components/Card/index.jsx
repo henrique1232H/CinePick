@@ -3,7 +3,7 @@ import { IoStarSharp } from "react-icons/io5";
 import DialogModal from "../DialogModal";
 import ButtonRollet from "../ButtonRollet";
 import SalvFilmButton from "../SalvFilmButton";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPaletteSync } from "colorthief";
 
 export default function Card({ isActive, filmChoose, start, loadingButton, save, saveButton }) {
@@ -13,6 +13,8 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
   const director = credits?.crew?.filter((person) => person.job === "Director");
   const date = film ? new Date(film.release_date).getFullYear() : null;
   const imageRef = useRef(null);
+  const [colors, setColors] = useState([])
+
 
   useEffect(() => {
     if (!isActive) return;
@@ -24,7 +26,8 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
       const palette = getPaletteSync(image, 6);
       const hexColors = palette.map((color) => color.hex());
 
-      console.log(hexColors);
+      setColors(hexColors)
+      console.log(hexColors)
     };
 
     if (image.complete && image.naturalWidth > 0) {
@@ -36,11 +39,21 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
   }, [isActive, filmChoose?.film?.poster_path]);
 
   return (
-    <div className={"bg-surface flex-wrap rounded-lg border-neutral-300 border font-sans mt-4"}>
+    <div
+      className="flex-wrap rounded-lg border border-neutral-300 bg-surface font-sans mt-4"
+      style={{
+        backgroundColor: colors[2] || undefined,
+        backgroundImage:
+          colors[2] && colors[3]
+            ? `linear-gradient(80deg, ${colors[2]}, ${colors[3]})`
+            : undefined,
+        transition: "300ms ease-in"
+      }}
+    >
       {isActive ? (
-        <div className={"relative"}>
+        <div className={`relative`}>
 
-          <div className="absolute top-0 w-full border-b border-gray-500">
+          <div className="absolute top-0 w-full border-b border-gray-500" style={{borderTop: `4px solid ${colors[1]}`}}>
             <img src={`https://image.tmdb.org/t/p/w500${film.backdrop_path}`} alt="" className="top-0 w-full h-45 left-0 object-cover"/>
 
             <div className="bg-linear-to-b from-black to-white/50 absolute z-0 w-full left-0 top-0 h-full"> 
@@ -56,6 +69,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                 <div className="group relative w-36 shrink-0 overflow-hidden shadow-lg">
                   <img
                     className="w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
+                    style={{border: `2px solid ${colors[3]}`}}
                     src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
                     crossOrigin="anonymous"
                     ref={imageRef}
@@ -71,7 +85,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
 
               <div className="pt-5 z-20 min-w-0">
                   <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
-                    <h2 className={"font-medium text-2xl text-ink hover:text-accent cursor-pointer transition-all mt-4"}> {film.title} </h2>
+                    <h2 className={"font-medium text-2xl text-(--title) hover:text-(--title-hover) cursor-pointer transition-all mt-4"} style={{ "--title-hover": colors[4] || "#2887FF", "--title": colors[1] || "#000" }}> {film.title} </h2>
                   </DialogModal>
 
                   {film.tagline !== "" && (
@@ -80,7 +94,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                     </p>
                   )}
                   
-                  <h3 className={"text-[12px] mt-2 text-gray-500 truncate"}> DIREÇÃO: <span className="text-ink font-bold">{director[0]?.name?.toUpperCase()}</span></h3>
+                  <h3 className={"text-[12px] mt-2 text-(--title) truncate"} style={{"--title": colors[4]}} > DIREÇÃO: <span className="text-ink font-bold">{director[0]?.name?.toUpperCase()}</span></h3>
               </div>
             </div>
 
@@ -108,7 +122,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
             <div className={"my-4 flex gap-1 flex-wrap"}>
               {film.genres.map((genre) => {
                 return (
-                  <span key={genre.id} className={"text-[9px] font-bold text-ink border-gray-300 border bg-gray-100/40 mr-1 py-1 px-2 cursor-pointer"}>
+                  <span key={genre.id} className={"text-[9px] font-bold border mr-1 py-1 px-2 cursor-pointer text-white"} style={{border: `1px solid  ${colors[3]}`}}>
                     {genre.name.toUpperCase()}
                   </span>
                 );
@@ -123,7 +137,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
             </div>
           ) : (
             <div className={"my-2 text-sm min-w-0"}>
-              <p className={"text-gray-600 line-clamp-3"}>{film.overview}</p>
+              <p className={"text-white line-clamp-3"}>{film.overview}</p>
             </div>
           )}
 
@@ -132,7 +146,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
           <div className={"flex min-w-0 items-center gap-1 text-[12px]"}>
             <h4>ELENCO:</h4>
             <p
-              className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-gray-400"
+              className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-white"
               title={actorInFilm.map((actor) => actor.name).join(", ")}
             >
               {actorInFilm.map((actor) => actor.name).join(", ")}
@@ -149,7 +163,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
 
           <div className={"flex items-center gap-2 mt-1 w-full pb-6"}>
             <DialogModal isCard={false} filmChoose={filmChoose}>
-              <button className={"bg-ink w-full flex items-center justify-center gap-1.5 px-6 py-3 text-white cursor-pointer font-bold font-sans transition-all hover:bg-ink-hover"}>
+              <button className={"bg-red-100 w-full flex items-center border border-red-400 justify-center gap-1.5 px-6 py-3 text-red-800 cursor-pointer font-bold font-sans transition-all hover:bg-red-200"}>
                 <FaPlay />
                 TRAILER
               </button>

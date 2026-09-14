@@ -33,7 +33,6 @@ export default function App() {
         setLoadingButton(false)
         return
       }
-
       
       try {
         for(let i = 1; i <= 3; i++) {
@@ -71,18 +70,24 @@ export default function App() {
             language: "pt-BR"
           }
         });
+ 
+        const brazilProviders = providersToFilm.data.results?.BR ?? [];
+
         const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
           params: {
             language: "pt-BR"
           }
         });
+        
 
         const film = {
           film: filmCorrect.data,
           trailer: trailerForFilm,
-          providers: providersToFilm.data.results,
+          providers: brazilProviders,
           credits: credits.data,
         }
+
+        console.log(film)
 
         
         setFilmChoose(film)
@@ -121,8 +126,13 @@ export default function App() {
   },[])
 
   useEffect(() => {
+    
+    const searchActor = async () => {
 
-     const searchActor = async () => {
+    if(actor === "") {
+      setActorInformation("")
+    }
+
      let checkOnlyActor = [];
       try {
         setLoading(true)

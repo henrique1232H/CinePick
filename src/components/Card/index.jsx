@@ -5,6 +5,7 @@ import ButtonRollet from "../ButtonRollet";
 import SalvFilmButton from "../SalvFilmButton";
 import { useEffect, useRef, useState } from "react";
 import { getPaletteSync } from "colorthief";
+import chroma from "chroma-js";
 
 export default function Card({ isActive, filmChoose, start, loadingButton, save, saveButton }) {
   const film = filmChoose?.film;
@@ -14,6 +15,9 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
   const date = film ? new Date(film.release_date).getFullYear() : null;
   const imageRef = useRef(null);
   const [colors, setColors] = useState([])
+  const [darkestColor, setDarkestColor] = useState("");
+  const [lightestColor, setLightestColor] = useState("");
+  const [provider, setProvider] = useState("")
 
 
   useEffect(() => {
@@ -26,8 +30,27 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
       const palette = getPaletteSync(image, 6);
       const hexColors = palette.map((color) => color.hex());
 
+      if (hexColors.length === 0) return;
+
+      const { darkest, lightest } = hexColors.slice(1).reduce(
+        (result, color) => {
+          const colorLuminance = chroma(color).luminance();
+          const darkestLuminance = chroma(result.darkest).luminance();
+          const lightestLuminance = chroma(result.lightest).luminance();
+
+          return {
+            darkest:
+              colorLuminance < darkestLuminance ? color : result.darkest,
+            lightest:
+              colorLuminance > lightestLuminance ? color : result.lightest,
+          };
+        },
+        { darkest: hexColors[0], lightest: hexColors[0] },
+      );
+
+      setDarkestColor(darkest);
+      setLightestColor(lightest);
       setColors(hexColors)
-      console.log(hexColors)
     };
 
     if (image.complete && image.naturalWidth > 0) {
@@ -38,14 +61,15 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
     }
   }, [isActive, filmChoose?.film?.poster_path]);
 
+
   return (
     <div
       className="flex-wrap rounded-lg border border-neutral-300 bg-surface font-sans mt-4"
       style={{
         backgroundColor: colors[2] || undefined,
         backgroundImage:
-          colors[2] && colors[3]
-            ? `linear-gradient(80deg, ${colors[2]}, ${colors[3]})`
+          colors[0] && colors[1]
+            ? `linear-gradient(40deg, ${colors[0]}, ${colors[3]})`
             : undefined,
         transition: "300ms ease-in"
       }}
@@ -57,7 +81,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
             <img src={`https://image.tmdb.org/t/p/w500${film.backdrop_path}`} alt="" className="top-0 w-full h-45 left-0 object-cover"/>
 
             <div className="bg-linear-to-b from-black to-white/50 absolute z-0 w-full left-0 top-0 h-full"> 
-                <span className="text-white flex my-3 mx-5 bg-ink w-35 text-[10px] items-center justify-center p-0.5 font-semibold border border-gray-600">
+                <span className="text-white flex my-3 mx-5 bg-ink w-35 text-[10px] items-center justify-center p-0.5 font-semibold " style={{border: `1px solid ${colors[0]}`}} >
                     SELEÇÃO DO DIA
                 </span>
             </div>
@@ -69,7 +93,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                 <div className="group relative w-36 shrink-0 overflow-hidden shadow-lg">
                   <img
                     className="w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
-                    style={{border: `2px solid ${colors[3]}`}}
+                    style={{border: `2px solid ${colors[0]}`}}
                     src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
                     crossOrigin="anonymous"
                     ref={imageRef}
@@ -84,8 +108,12 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
               </DialogModal>
 
               <div className="pt-5 z-20 min-w-0">
+                  <div className="bg-red-400"> 
+                    {filmChoose.providers.length === 0 && "Cinema"}
+                  </div>
+
                   <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
-                    <h2 className={"font-medium text-2xl text-(--title) hover:text-(--title-hover) cursor-pointer transition-all mt-4"} style={{ "--title-hover": colors[4] || "#2887FF", "--title": colors[1] || "#000" }}> {film.title} </h2>
+                    <h2 className="mt-4 cursor-pointer text-2xl font-medium text-(--title) transition-all hover:text-(--title-hover)" style={{ "--title": lightestColor || "#ffffff", "--title-hover": darkestColor || "#000000" }}> {film.title} </h2>
                   </DialogModal>
 
                   {film.tagline !== "" && (
@@ -94,7 +122,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                     </p>
                   )}
                   
-                  <h3 className={"text-[12px] mt-2 text-(--title) truncate"} style={{"--title": colors[4]}} > DIREÇÃO: <span className="text-ink font-bold">{director[0]?.name?.toUpperCase()}</span></h3>
+                  <h3 className={"text-[12px] mt-2 text-(--title) truncate"} style={{"--title": lightestColor}} > DIREÇÃO: <span className="text-white font-bold">{director[0]?.name?.toUpperCase()}</span></h3>
               </div>
             </div>
 

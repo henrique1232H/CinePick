@@ -1,74 +1,74 @@
-import { FaEye, FaPlay, FaRegTrashAlt, FaStar } from "react-icons/fa";
-import { MdMessage } from "react-icons/md";
-import { useState } from "react";
+import { FaEye, FaPlay, FaRegTrashAlt } from "react-icons/fa";
 import DialogModal from "../DialogModal";
+import FilmStats from "../FilmStats";
+import chroma from "chroma-js";
 
-export default function SalvFilmCard({ props, date, status, removeFilm, addNote, noteCard, children, markDone }) {
-  const [isActive, setIsActive] = useState(false);
+export default function SalvFilmCard({ props, date, status, removeFilm, markDone }) {
   const { film } = props;
+  const colors = props.colors ?? [];
+  const palette = colors[0]?.hexColors ?? [];
+  const softColor = chroma(palette[2]).alpha(0.16).css();
   const dateFilm = new Date(film.release_date).getFullYear();
 
+
+
   return (
-    <div className={`flex relative items-center bg-white p-2 mt-4 border border-gray-300 gap-3 ${!status ? "hover:border-ink-hover" : "border-none"} transition-all w-full h-auto font-sans`}>
+    <div 
+      className={`relative bg-white border-x border-b border-gray-300 px-3 py-4 mt-4 gap-3 ${!status ? "hover:border-ink-hover" : "border-none"} transition-all w-full h-auto font-sans`} 
+      style={{borderTop:`5px solid ${palette[1] ?? palette[0] ?? "#d1d5db"}`, backgroundColor: "#ffffff",
+        backgroundImage: palette[0]
+          ? `linear-gradient(120deg, ${softColor} 10%, rgba(255, 255, 255, 0.92) 22%, #ffffff 42%, #ffffff 100%)`
+          : undefined,
+        transition: "300ms ease-in"}}>
+
+          
       <div className={`absolute top-0 ${status ? "bg-white/30 z-10" : "bg-none -z-10"} w-full h-full`} />
 
-      <div>
+      <div className="flex w-full gap-3">
         <DialogModal filmChoose={props}>
           <img
             src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
             alt={film.title}
-            className={"h-40 w-35 border border-gray-300 cursor-pointer"}
+            className={"h-40 w-auto border border-gray-300 cursor-pointer"}
           />
         </DialogModal>
-      </div>
 
-      <div className="h-full w-full flex p-2">
-        <div className="flex flex-col gap-2 w-full">
-          <p className={"text-accent text-[11px] font-bold font-sans mb-2"}> SALVO EM {date}</p>
+        <div className="w-full">
+
+          <div className="flex items-center justify-between w-60">
+            <p className={"text-[10px] bg-(--background)/30 font-bold font-sans mb-2 px-3 py-1"} style={{"--background": colors[0].hexColors[1], color: colors[0].hexColors[4], border: `1px solid ${colors[0].hexColors[1]}`}}>SALVO EM {date}</p>
+
+            <div className={""}>
+              <button
+                className="cursor-pointer rounded-lg text-gray-400 hover:bg-red-200/90 hover:text-red-700 transition-all p-1"
+                onClick={removeFilm}
+              >
+                <FaRegTrashAlt />
+              </button>
+            
+            </div>
+          </div>
 
           <DialogModal filmChoose={props}>
             <h4 className={"cursor-pointer hover:text-accent transition-all text-ink font-italic"}>{film.title}</h4>
           </DialogModal>
+        </div>
+
+
+      </div>
+
+      <div className="h-full w-full flex p-2">
+        <div className="flex flex-col gap-2 w-full">
 
           <div>
-            <p className={"flex text-gray-500 items-center gap-1 text-[12px] mt-1 font-sans font-semibold"}>
-              <span className="text-accent font-bold flex gap-1 items-center">
-                <FaStar /> {film.vote_average.toFixed(1)}
-              </span>
-              • {dateFilm} • {film.genres[0].name}
-            </p>
+            <FilmStats 
+                date={dateFilm}
+                voteAverage={film.vote_average}
+                runtime={film.runtime}
+            />
           </div>
 
-          <div className={"mt-2"}>
-            {!isActive ? (
-              <button
-                className={"flex items-center gap-1 text-gray-600 font-sans text-[13px] cursor-pointer hover:text-ink"}
-                onClick={() => setIsActive(!isActive)}
-              >
-                <MdMessage className={"text-accent"} /> {noteCard === "" ? "+ Adicionar nota pessoal" : `Nota:"${noteCard}"`}
-              </button>
-            ) : (
-              <div className={"bg-gray-100 border border-gray-200 p-1.5"}>
-                {children}
-
-                <div className={"flex gap-2 mt-2 font-semibold text-[12px] justify-center"}>
-                  <button
-                    className={"p-4 bg-ink text-white w-full cursor-pointer"}
-                    onClick={() => {
-                      setIsActive(false);
-                      addNote();
-                    }}
-                  >
-                    SALVAR NOTA
-                  </button>
-                  <button className={"p-4 bg-gray-300 cursor-pointer"} onClick={() => setIsActive(!isActive)}>
-                    CANCELAR
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
+  
           <div className={"flex gap-2 mt-2 mb- font-semibold p-2 text-[12px] justify-center border-t-gray-300 border-t w-full"}>
             <DialogModal isCard={false} filmChoose={props}>
               <button className={"bg-red-600 flex items-center justify-center gap-1.5 px-6 py-3 z-10 text-white cursor-pointer font-bold font-sans transition-all hover:bg-red-600/70"}>
@@ -93,14 +93,6 @@ export default function SalvFilmCard({ props, date, status, removeFilm, addNote,
           </div>
         </div>
 
-        <div className={""}>
-          <button
-            className="cursor-pointer rounded-lg text-gray-400 hover:bg-red-200/90 hover:text-red-700 transition-all p-1"
-            onClick={removeFilm}
-          >
-            <FaRegTrashAlt />
-          </button>
-        </div>
       </div>
     </div>
   );

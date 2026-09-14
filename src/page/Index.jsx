@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { api } from '../service/api'
 import Header from '../components/Header'
 import authenticantion from '../service/authenticantion'
@@ -6,6 +6,8 @@ import SortFilms from '../components/SortFilms'
 import { checkFilters } from '../components/checkFilters'
 import { FaDice, FaRegSave } from 'react-icons/fa'
 import ListFilm from '../components/ListFilms'
+
+import { getColors } from '../components/getColors'
 
 export default function App() {
 
@@ -20,179 +22,179 @@ export default function App() {
   const [changePage, setChangePage] = useState(false);
 
   const [saveFilm, setSaveFilm] = useState(false);
-  const [listFilmsSave, setListFilmsSave] = useState([])
+  const [listFilmsSave, setListFilmsSave] = useState([]);
 
-    const searchFilm = async () => {
-      setSaveFilm(false)
-      setLoadingButton(true)
-      let filmsToRandom = []
-      let response;
+  const imageRef = useRef(null)
 
-      if(actorInformation[0] === "Sem ator") {
-        alert("Por favor digite um ator valido")
-        setLoadingButton(false)
-        return
-      }
-      
-      try {
-        for(let i = 1; i <= 3; i++) {
-          response = await checkFilters(chooseGenre, i, actorInformation);          
-          response.results.forEach(filmInArray => {
-            filmsToRandom = [...filmsToRandom, filmInArray];
-          })
-          
-        }
-        
-        if(filmsToRandom.length === 0) {
-          alert("Não existe filme assim")
-          return
-        }
+  const searchFilm = async () => {
+    setSaveFilm(false)
+    setLoadingButton(true)
+    let filmsToRandom = []
+    let response;
 
-        const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
-        
-        const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
-          params: {
-            language: "pt-BR"
-          }
-        });
-
-
-        const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.film.id === filmCorrect.data.id);
-
-        checkIfFilmIsAlreadySave.length === 1 && setSaveFilm(true)
-        
-        let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`);
-
-        trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer")[0];
-
-        const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
-          params: {
-            language: "pt-BR"
-          }
-        });
- 
-        const brazilProviders = providersToFilm.data.results?.BR ?? [];
-
-        const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
-          params: {
-            language: "pt-BR"
-          }
-        });
-        
-
-        const film = {
-          film: filmCorrect.data,
-          trailer: trailerForFilm,
-          providers: brazilProviders,
-          credits: credits.data,
-        }
-
-        console.log(film)
-
-        
-        setFilmChoose(film)
-        setRunRollet(true)
-      } catch (err) {
-        console.log(err)
-      } finally {
-        setLoadingButton(false)
-      }
+    if(actorInformation[0] === "Sem ator") {
+      alert("Por favor digite um ator valido")
+      setLoadingButton(false)
+      return
     }
     
-    useEffect(() => {
+    try {
+      for(let i = 1; i <= 3; i++) {
+        response = await checkFilters(chooseGenre, i, actorInformation);          
+        response.results.forEach(filmInArray => {
+          filmsToRandom = [...filmsToRandom, filmInArray];
+        })
+        
+      }
+      
+      if(filmsToRandom.length === 0) {
+        alert("Não existe filme assim")
+        return
+      }
 
-    const checkMovieList = async () => {
-      const response = await api.get("/genre/movie/list", {
+      const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
+      
+      const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
         params: {
           language: "pt-BR"
         }
       });
-      setGenres(response.data.genres)
-    }
 
-    checkMovieList()
+
+      const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.film.id === filmCorrect.data.id);
+
+      checkIfFilmIsAlreadySave.length === 1 && setSaveFilm(true)
       
-    const checkAuthentication = async () => {
+      let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`);
 
-    try {
-      const returnAuth = await authenticantion();
-      return returnAuth.data
-    } catch (err) {
-      alert(err);
-    }
+      trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer")[0];
 
-    }
-    checkAuthentication()
-  },[])
-
-  useEffect(() => {
-    
-    const searchActor = async () => {
-
-    if(actor === "") {
-      setActorInformation("")
-    }
-
-     let checkOnlyActor = [];
-      try {
-        setLoading(true)
-        const response = await api.get(`/search/person?query=${actor}`, {
-          params: {
-            language: "pt-BR"
-          }
-        });
-
-        response.data.results.length !== 0 ? checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting")[0] : ["Sem ator"]
-        
-      } catch (err) {
-        console.log(err)
-      } finally {
-        const informationActor = await api.get(`/person/${checkOnlyActor.id}`, {
-          params: {
-            language: "pt-BR"
-          }
-        });
-
-        const responseActor = {
-          id: informationActor.data.id,
-          original_name: checkOnlyActor.original_name,
-          name: informationActor.data.name,
-          profile_path: checkOnlyActor.profile_path,
-          known_for: checkOnlyActor.known_for,
-          biography: informationActor.data.biography,
-          birthday: informationActor.data.birthday,
-          also_known_as: informationActor.data.also_known_as,
-          place_of_birth: informationActor.data.place_of_birth,
+      const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
+        params: {
+          language: "pt-BR"
         }
+      });
 
-        setLoading(false)
-        setActorInformation(responseActor)
+      const brazilProviders = providersToFilm.data.results?.BR ?? [];
+
+      const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
+        params: {
+          language: "pt-BR"
+        }
+      });
+
+      const getColorsFromImage = await getColors(filmCorrect);
+
+      const film = {
+        film: filmCorrect.data,
+        trailer: trailerForFilm,
+        providers: brazilProviders,
+        credits: credits.data,
+        colors: getColorsFromImage,
       }
-     }
-
-     searchActor()
-  }, [actor])
-
-  const saveFilmInList = () => {
-    if(saveFilm === false){
-      const year = new Date().getFullYear();
-      const month = new Date().getMonth();
-      const day = new Date().getDate();
-      const date = `${day}/${month}/${year}`
-
-
-    const film = {filmChoose, date, status: false, note: ""}
-
-      setListFilmsSave((prevent) => [...prevent, film])
-      setSaveFilm(true)
-      
-    } else {
-      const removeFilm = listFilmsSave.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id)
-      setListFilmsSave(removeFilm)
-      setSaveFilm(false)
+    
+      setFilmChoose(film)
+      setRunRollet(true)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setLoadingButton(false)
     }
   }
+  
+  useEffect(() => {
 
+  const checkMovieList = async () => {
+    const response = await api.get("/genre/movie/list", {
+      params: {
+        language: "pt-BR"
+      }
+    });
+    setGenres(response.data.genres)
+  }
+
+  checkMovieList()
+    
+  const checkAuthentication = async () => {
+
+  try {
+    const returnAuth = await authenticantion();
+    return returnAuth.data
+  } catch (err) {
+    alert(err);
+  }
+
+  }
+  checkAuthentication()
+},[])
+
+useEffect(() => {
+  
+  const searchActor = async () => {
+
+  if(actor === "") {
+    setActorInformation("")
+  }
+
+    let checkOnlyActor = [];
+    try {
+      setLoading(true)
+      const response = await api.get(`/search/person?query=${actor}`, {
+        params: {
+          language: "pt-BR"
+        }
+      });
+
+      response.data.results.length !== 0 ? checkOnlyActor = response.data.results.filter((e) => e.known_for_department === "Acting")[0] : ["Sem ator"]
+      
+    } catch (err) {
+      console.log(err)
+    } finally {
+      const informationActor = await api.get(`/person/${checkOnlyActor.id}`, {
+        params: {
+          language: "pt-BR"
+        }
+      });
+
+      const responseActor = {
+        id: informationActor.data.id,
+        original_name: checkOnlyActor.original_name,
+        name: informationActor.data.name,
+        profile_path: checkOnlyActor.profile_path,
+        known_for: checkOnlyActor.known_for,
+        biography: informationActor.data.biography,
+        birthday: informationActor.data.birthday,
+        also_known_as: informationActor.data.also_known_as,
+        place_of_birth: informationActor.data.place_of_birth,
+      }
+
+      setLoading(false)
+      setActorInformation(responseActor)
+    }
+    }
+
+    searchActor()
+}, [actor])
+
+const saveFilmInList = () => {
+  if(saveFilm === false){
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth();
+    const day = new Date().getDate();
+    const date = `${day}/${month}/${year}`
+
+
+  const film = {filmChoose, date, status: false, note: ""}
+
+    setListFilmsSave((prevent) => [...prevent, film])
+    setSaveFilm(true)
+    
+  } else {
+    const removeFilm = listFilmsSave.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id)
+    setListFilmsSave(removeFilm)
+    setSaveFilm(false)
+  }
+}
   return (
     <>
       <Header />
@@ -215,6 +217,7 @@ export default function App() {
               loading={loading}
               saveButton={saveFilm}
               save={saveFilmInList}
+              Ref={imageRef}
     
             />
           ): <ListFilm 

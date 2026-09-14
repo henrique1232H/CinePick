@@ -1,70 +1,25 @@
 import { FaDice, FaPlay } from "react-icons/fa";
-import { IoStarSharp } from "react-icons/io5";
 import DialogModal from "../DialogModal";
 import ButtonRollet from "../ButtonRollet";
 import SalvFilmButton from "../SalvFilmButton";
-import { useEffect, useRef, useState } from "react";
-import { getPaletteSync } from "colorthief";
-import chroma from "chroma-js";
+import FilmStats from "../FilmStats";
 
-export default function Card({ isActive, filmChoose, start, loadingButton, save, saveButton }) {
+
+export default function Card({ isActive, filmChoose, start, loadingButton, save, saveButton, Ref }) {
   const film = filmChoose?.film;
   const credits = filmChoose?.credits;
   const actorInFilm = credits?.cast
+  
   const director = credits?.crew?.filter((person) => person.job === "Director");
   const date = film ? new Date(film.release_date).getFullYear() : null;
-  const imageRef = useRef(null);
-  const [colors, setColors] = useState([])
-  const [darkestColor, setDarkestColor] = useState("");
-  const [lightestColor, setLightestColor] = useState("");
-  const [provider, setProvider] = useState("")
-
-
-  useEffect(() => {
-    if (!isActive) return;
-
-    const image = imageRef.current;
-    if (!image) return;
-
-    const getColors = () => {
-      const palette = getPaletteSync(image, 6);
-      const hexColors = palette.map((color) => color.hex());
-
-      if (hexColors.length === 0) return;
-
-      const { darkest, lightest } = hexColors.slice(1).reduce(
-        (result, color) => {
-          const colorLuminance = chroma(color).luminance();
-          const darkestLuminance = chroma(result.darkest).luminance();
-          const lightestLuminance = chroma(result.lightest).luminance();
-
-          return {
-            darkest:
-              colorLuminance < darkestLuminance ? color : result.darkest,
-            lightest:
-              colorLuminance > lightestLuminance ? color : result.lightest,
-          };
-        },
-        { darkest: hexColors[0], lightest: hexColors[0] },
-      );
-
-      setDarkestColor(darkest);
-      setLightestColor(lightest);
-      setColors(hexColors)
-    };
-
-    if (image.complete && image.naturalWidth > 0) {
-      getColors();
-    } else {
-      image.addEventListener("load", getColors);
-      return () => image.removeEventListener("load", getColors);
-    }
-  }, [isActive, filmChoose?.film?.poster_path]);
-
+  
+  const colors = filmChoose?.colors?.[0]?.hexColors ?? [];
+  const darkestColor = filmChoose?.colors?.[1]?.darkest ?? "";
+  const lightestColor = filmChoose?.colors?.[1]?.lightest ?? "";
 
   return (
     <div
-      className="flex-wrap rounded-lg border border-neutral-300 bg-surface font-sans mt-4"
+      className="flex-wrap rounded-lg bg-surface font-sans mt-4"
       style={{
         backgroundColor: colors[2] || undefined,
         backgroundImage:
@@ -81,7 +36,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
             <img src={`https://image.tmdb.org/t/p/w500${film.backdrop_path}`} alt="" className="top-0 w-full h-45 left-0 object-cover"/>
 
             <div className="bg-linear-to-b from-black to-white/50 absolute z-0 w-full left-0 top-0 h-full"> 
-                <span className="text-white flex my-3 mx-5 bg-ink w-35 text-[10px] items-center justify-center p-0.5 font-semibold " style={{border: `1px solid ${colors[0]}`}} >
+                <span className="text-white flex my-3 mx-5 bg-ink w-35 text-[10px] items-center justify-center p-0.5 font-semibold " style={{border: `1px solid ${colors[1]}`}} >
                     SELEÇÃO DO DIA
                 </span>
             </div>
@@ -96,7 +51,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
                     style={{border: `2px solid ${colors[0]}`}}
                     src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
                     crossOrigin="anonymous"
-                    ref={imageRef}
+                    ref={Ref}
                     alt={film.title}
                   />
                   <div className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-ink/90 opacity-0 transition-opacity group-hover:opacity-100">
@@ -108,16 +63,13 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
               </DialogModal>
 
               <div className="pt-5 z-20 min-w-0">
-                  <div className="bg-red-400"> 
-                    {filmChoose.providers.length === 0 && "Cinema"}
-                  </div>
 
                   <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
                     <h2 className="mt-4 cursor-pointer text-2xl font-medium text-(--title) transition-all hover:text-(--title-hover)" style={{ "--title": lightestColor || "#ffffff", "--title-hover": darkestColor || "#000000" }}> {film.title} </h2>
                   </DialogModal>
 
                   {film.tagline !== "" && (
-                    <p className="block max-w-full truncate text-[10px] italic">
+                    <p className="block max-w-full truncate text-[10px] italic" style={{color: lightestColor}}>
                       "{film.tagline}"
                     </p>
                   )}
@@ -126,26 +78,11 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
               </div>
             </div>
 
-            <div className="mt-5 flex bg-gray-100 border border-gray-300 items-center justify-between w-auto">
-              <div className={"flex flex-col items-center gap-1 text-gray-400 bg-gray-100/70 border-neutral-300 border-r text-[12px] font-bold py-2 px-5 hover:bg-gray-200 transition-all"}>
-                NOTA
-                <span className="flex items-center gap-2">
-                  <IoStarSharp className="text-yellow-300"/> <span className="font-bold text-ink">{film.vote_average.toFixed(1) }</span>  / 10
-                </span>
-
-              </div>
-
-              <span className={"text-[9px] font-bold py-2 px-5 text-gray-400 flex flex-col items-center hover:bg-gray-200 transition-all"}>
-                LANÇAMENTO
-                <span className={"mt-2 text-ink text-[11px]"}>{date}</span>
-              </span>
-
-              <span className={"border-l border-gray-300 text-gray-400 text-[9px] flex flex-col py-2 px-5 hover:bg-gray-200 transition-all"}>
-                DURAÇÃO
-                <span className="mt-2 text-[11px] text-ink font-bold">{film.runtime} min</span>
-              </span>
-
-            </div>
+            <FilmStats
+              voteAverage={film.vote_average}
+              date={date}
+              runtime={film.runtime}
+            />
 
             <div className={"my-4 flex gap-1 flex-wrap"}>
               {film.genres.map((genre) => {

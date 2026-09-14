@@ -19,7 +19,8 @@ export default function SortFilms({
     clear,
     change,
     save,
-    saveButton
+    saveButton,
+    Ref
 }) {
     const checkActor = actorInformation.length === 0 ? [] : actorInformation
 
@@ -29,7 +30,7 @@ export default function SortFilms({
                 <h2 className={"text-4xl text-ink italic"}>Sorteie o <span className={"text-accent"}>filme perfeito</span></h2>
                 <p className={"text-xs text-gray-600 font-sans font-medium mt-3"}>Defina gênero ou autor de preferência e deixe nossa roleta escolher o filme ideal para a sua noite.</p>
 
-                <Card filmChoose={filmChoose} saveButton={saveButton} save={save} isActive={runRollet} start={searchFilm} loadingButton={loadingButton}/>
+                <Card filmChoose={filmChoose} saveButton={saveButton} save={save} isActive={runRollet} start={searchFilm} loadingButton={loadingButton} Ref={Ref}/>
             </div>
 
             <div className={"bg-surface mx-3 my-4 p-5 rounded-lg border-neutral-300 border-b font-sans"}>

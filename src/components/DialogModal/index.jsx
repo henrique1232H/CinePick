@@ -16,7 +16,6 @@ export default function DialogModal({
 
 	const actors = credits?.cast?.slice(0, 3) ?? [];
 	const director = credits?.crew?.find((person) => person.job === "Director") ?? null;
-	const brazilProviders = providers?.BR?.flatrate ?? [];
 	const date = film?.release_date
 		? new Date(film.release_date).getFullYear()
 		: "";
@@ -37,7 +36,7 @@ export default function DialogModal({
 					director={director}
 					save={save}
 					saveButton={saveButton}
-					brazilProviders={brazilProviders}
+					brazilProviders={providers?.flatrate ?? []}
 				/>
 			) : (
 				<TrailerOrActor

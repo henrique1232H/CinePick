@@ -69,7 +69,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
         backgroundColor: colors[2] || undefined,
         backgroundImage:
           colors[0] && colors[1]
-            ? `linear-gradient(40deg, ${colors[0]}, ${colors[3]})`
+            ? `linear-gradient(40deg, ${colors[0]}, ${colors[2]})`
             : undefined,
         transition: "300ms ease-in"
       }}

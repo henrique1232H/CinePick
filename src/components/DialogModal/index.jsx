@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import { AlertDialog } from "radix-ui";
 import FilmDetails from "./filmDetails";
 import TrailerOrActor from "./trailerOrActor";
@@ -19,11 +20,19 @@ export default function DialogModal({
 	const date = film?.release_date
 		? new Date(film.release_date).getFullYear()
 		: "";
+	const trigger = isValidElement(children)
+		? cloneElement(children, {
+			onPointerDown: (event) => {
+				event.stopPropagation();
+				children.props.onPointerDown?.(event);
+			},
+		})
+		: children;
 
     return (
         <AlertDialog.Root>
             <AlertDialog.Trigger asChild>
-                {children}
+                {trigger}
             </AlertDialog.Trigger>
             <AlertDialog.Portal>
 			<AlertDialog.Overlay className="modal-overlay fixed z-50 inset-0 bg-black/70" />

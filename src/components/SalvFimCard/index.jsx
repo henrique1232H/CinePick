@@ -14,7 +14,7 @@ export default function SalvFilmCard({ props, date, status, removeFilm, markDone
 
   return (
     <div 
-      className={`relative bg-white border-x border-b border-gray-300 px-3 py-4 mt-4 gap-3 ${!status ? "hover:border-ink-hover" : "border-none"} transition-all w-full h-auto font-sans`} 
+      className={`relative bg-white border-x border-b border-gray-300 px-3 py-4 mt-4 gap-3 ${!status ? "hover:shadow-2xl" : "border-none"} transition-all w-full h-auto font-sans`} 
       style={{borderTop:`5px solid ${palette[1] ?? palette[0] ?? "#d1d5db"}`, backgroundColor: "#ffffff",
         backgroundImage: palette[0]
           ? `linear-gradient(120deg, ${softColor} 10%, rgba(255, 255, 255, 0.92) 22%, #ffffff 42%, #ffffff 100%)`
@@ -26,11 +26,20 @@ export default function SalvFilmCard({ props, date, status, removeFilm, markDone
 
       <div className="flex w-full gap-3">
         <DialogModal filmChoose={props}>
-          <img
-            src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
-            alt={film.title}
-            className={"h-40 w-auto border border-gray-300 cursor-pointer"}
-          />
+          <div className="group relative w-20 shrink-0 overflow-hidden shadow-lg">
+                  <img
+                    className="w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
+                    style={{border: `2px solid ${colors[0]}`}}
+                    src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
+                    crossOrigin="anonymous"
+                    alt={film.title}
+                  />
+                  <div className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-ink/90 opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="border border-gray-400 bg-ink px-1 py-1 font-sans text-white">
+                      VER FICHA
+                    </span>
+                  </div>
+                </div>
         </DialogModal>
 
         <div className="w-full">
@@ -50,7 +59,7 @@ export default function SalvFilmCard({ props, date, status, removeFilm, markDone
           </div>
 
           <DialogModal filmChoose={props}>
-            <h4 className={"cursor-pointer hover:text-accent transition-all text-ink font-italic"}>{film.title}</h4>
+            <h1 className={"cursor-pointer hover:text-accent text-[20px] transition-all text-ink"}>{film.title}</h1>
           </DialogModal>
         </div>
 

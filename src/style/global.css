@@ -83,6 +83,10 @@ h1, h2 {
    animation: modal-content-out 140ms ease-in;
 }
 
+.react-multiple-carousel__arrow {
+   z-index: 10;
+}
+
 @media (prefers-reduced-motion: reduce) {
    .modal-overlay,
    .modal-content {

@@ -26,7 +26,7 @@ export const getColors = async (filmCorrect) => {
                 colorLuminance > lightestLuminance ? color : result.lightest,
             };
           },
-          { darkest: hexColors[0], lightest: hexColors[0] },
+          { darkest: hexColors[0], lightest: hexColors[1] },
         );
 
         return [{hexColors: hexColors}, {darkest: darkest, lightest:lightest}]

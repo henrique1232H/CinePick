@@ -24,6 +24,8 @@ export default function App() {
   const [saveFilm, setSaveFilm] = useState(false);
   const [listFilmsSave, setListFilmsSave] = useState([]);
 
+  const [filmsCarousel, setFilmsCarousel] = useState([]);
+
   const imageRef = useRef(null)
 
   const searchFilm = async () => {
@@ -46,55 +48,67 @@ export default function App() {
         })
         
       }
+
       
       if(filmsToRandom.length === 0) {
         alert("Não existe filme assim")
         return
       }
-
-      const random = Math.floor(Math.random() * (filmsToRandom.length - 0) + 0);
       
-      const filmCorrect = await api.get(`/movie/${filmsToRandom[random].id}`, {
-        params: {
-          language: "pt-BR"
-        }
-      });
+      const selectedFilms = [...new Map(
+        filmsToRandom.map((film) => [film.id, film]),
+      ).values()]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 5);
 
 
-      const checkIfFilmIsAlreadySave = listFilmsSave.filter((filmsSave) => filmsSave.filmChoose.film.id === filmCorrect.data.id);
+      const completeFilmResponses = await Promise.allSettled(selectedFilms.map(async (selectedFilm) => {
+        const filmResponse = await api.get(`/movie/${selectedFilm.id}`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
 
-      checkIfFilmIsAlreadySave.length === 1 && setSaveFilm(true)
-      
-      let trailerForFilm = await api.get(`/movie/${filmCorrect.data.id}/videos`);
+        const trailerResponse = await api.get(`/movie/${selectedFilm.id}/videos`);
+        const trailer = trailerResponse.data.results.find((video) => video.type === "Trailer");
 
-      trailerForFilm = trailerForFilm.data.results.filter((e) => e.type === "Trailer")[0];
+        const providersResponse = await api.get(`/movie/${selectedFilm.id}/watch/providers`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
 
-      const providersToFilm = await api.get(`/movie/${filmCorrect.data.id}/watch/providers`, {
-        params: {
-          language: "pt-BR"
-        }
-      });
+        const creditsResponse = await api.get(`/movie/${selectedFilm.id}/credits`, {
+          params: {
+            language: "pt-BR"
+          }
+        });
 
-      const brazilProviders = providersToFilm.data.results?.BR ?? [];
+        return {
+          film: filmResponse.data,
+          trailer,
+          providers: providersResponse.data.results?.BR ?? {},
+          credits: creditsResponse.data,
+          colors: await getColors(filmResponse),
+        };
+      }));
 
-      const credits = await api.get(`/movie/${filmCorrect.data.id}/credits`, {
-        params: {
-          language: "pt-BR"
-        }
-      });
+      const completeFilms = completeFilmResponses
+        .filter((result) => result.status === "fulfilled")
+        .map((result) => result.value);
 
-      const getColorsFromImage = await getColors(filmCorrect);
-
-      const film = {
-        film: filmCorrect.data,
-        trailer: trailerForFilm,
-        providers: brazilProviders,
-        credits: credits.data,
-        colors: getColorsFromImage,
+      if (completeFilms.length === 0) {
+        alert("Não foi possível carregar os filmes");
+        return;
       }
-    
-      setFilmChoose(film)
-      setRunRollet(true)
+
+      const selectedFilm = completeFilms[0];
+      setFilmsCarousel(completeFilms);
+      setFilmChoose(selectedFilm);
+      setSaveFilm(listFilmsSave.some(({ filmChoose: savedFilm }) => savedFilm.film.id === selectedFilm.film.id));
+      setRunRollet(true);
+
+
     } catch (err) {
       console.log(err)
     } finally {
@@ -176,23 +190,34 @@ useEffect(() => {
     searchActor()
 }, [actor])
 
-const saveFilmInList = () => {
-  if(saveFilm === false){
+const saveFilmInList = (filmToSave = filmChoose) => {
+  if (!filmToSave) {
+    return;
+  }
+
+  const isFilmSaved = listFilmsSave.some(
+    ({ filmChoose: savedFilm }) => savedFilm.film.id === filmToSave.film.id,
+  );
+
+  if (!isFilmSaved) {
     const year = new Date().getFullYear();
     const month = new Date().getMonth();
     const day = new Date().getDate();
     const date = `${day}/${month}/${year}`
 
-
-  const film = {filmChoose, date, status: false, note: ""}
+  const film = {filmChoose: filmToSave, date, status: false, note: ""}
 
     setListFilmsSave((prevent) => [...prevent, film])
-    setSaveFilm(true)
-    
+    if (filmToSave.film.id === filmChoose?.film.id) {
+      setSaveFilm(true)
+    }
   } else {
-    const removeFilm = listFilmsSave.filter((filmToRemove) => filmToRemove.filmChoose.film.id !== filmChoose.film.id)
-    setListFilmsSave(removeFilm)
-    setSaveFilm(false)
+    setListFilmsSave((currentFilms) => currentFilms.filter(
+      (filmToRemove) => filmToRemove.filmChoose.film.id !== filmToSave.film.id,
+    ))
+    if (filmToSave.film.id === filmChoose?.film.id) {
+      setSaveFilm(false)
+    }
   }
 }
   return (
@@ -215,9 +240,12 @@ const saveFilmInList = () => {
               change={(e) => setActor(e.target.value)}
               actorInformation={actorInformation}
               loading={loading}
-              saveButton={saveFilm}
+              saveButton={(film) => listFilmsSave.some(
+                ({ filmChoose: savedFilm }) => savedFilm.film.id === film?.film?.id,
+              )}
               save={saveFilmInList}
               Ref={imageRef}
+              filmsCarousel={filmsCarousel}
     
             />
           ): <ListFilm 

@@ -5,17 +5,20 @@ import SalvFilmButton from "../SalvFilmButton";
 import FilmStats from "../FilmStats";
 
 
-export default function Card({ isActive, filmChoose, start, loadingButton, save, saveButton, Ref }) {
+export default function Card({ isActive, filmChoose, start, loadingButton, save, saveButton}) {
   const film = filmChoose?.film;
   const credits = filmChoose?.credits;
   const actorInFilm = credits?.cast
   
   const director = credits?.crew?.filter((person) => person.job === "Director");
   const date = film ? new Date(film.release_date).getFullYear() : null;
-  
+
   const colors = filmChoose?.colors?.[0]?.hexColors ?? [];
   const darkestColor = filmChoose?.colors?.[1]?.darkest ?? "";
   const lightestColor = filmChoose?.colors?.[1]?.lightest ?? "";
+  const filmIsSaved = typeof saveButton === "function"
+    ? saveButton(filmChoose)
+    : saveButton;
 
   return (
     <div
@@ -44,14 +47,13 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
 
           <div className="pt-29 px-5">
             <div className="flex items-center z-30 gap-2.5 ">
-              <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
+              <DialogModal filmChoose={filmChoose} save={() => save(filmChoose)} saveButton={filmIsSaved}>
                 <div className="group relative w-36 shrink-0 overflow-hidden shadow-lg">
                   <img
                     className="w-full cursor-pointer object-cover border-2 border-gray-500 shadow-2xl shadow-gray-950"
                     style={{border: `2px solid ${colors[0]}`}}
                     src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
                     crossOrigin="anonymous"
-                    ref={Ref}
                     alt={film.title}
                   />
                   <div className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-ink/90 opacity-0 transition-opacity group-hover:opacity-100">
@@ -64,7 +66,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
 
               <div className="pt-5 z-20 min-w-0">
 
-                  <DialogModal filmChoose={filmChoose} save={save} saveButton={saveButton}>
+                  <DialogModal filmChoose={filmChoose} save={() => save(filmChoose)} saveButton={filmIsSaved}>
                     <h2 className="mt-4 cursor-pointer text-2xl font-medium text-(--title) transition-all hover:text-(--title-hover)" style={{ "--title": lightestColor || "#ffffff", "--title-hover": darkestColor || "#000000" }}> {film.title} </h2>
                   </DialogModal>
 
@@ -134,7 +136,7 @@ export default function Card({ isActive, filmChoose, start, loadingButton, save,
               </button>
             </DialogModal>
 
-            <SalvFilmButton save={save} saveButton={saveButton} />
+            <SalvFilmButton save={() => save(filmChoose)} saveButton={filmIsSaved} />
           </div>
           </div>
         </div>
